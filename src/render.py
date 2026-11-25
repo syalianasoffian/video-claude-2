@@ -300,7 +300,7 @@ def scene_profile(fr, t):
 def scene_hibah(fr, t):
     if not (4.9 <= t <= 9.9):
         return
-    x, y, w, h = 130, 1040, 770, 380
+    x, y, w, h = 130, 1040, 770, 392
     out = prog(t, 9.6, 0.25)
     a = 1 - out
     y += 40 * ease_in_out(out)
@@ -365,10 +365,10 @@ def scene_hibah(fr, t):
         s = 1.7 - 0.7 * ease_out_back(pst)
         im2 = scaled(im, s)
         g, pad = glow(im2, 18, GOLD, 0.9 * math.exp(-(t - 9.14) / 0.5))
-        cx, cy = x + w - 36 - im.width / 2, y + 350
+        cx, cy = x + w - 40 - im.width / 2, y + 340
         paste(fr, g, cx - g.width / 2, cy - g.height / 2, a)
         paste(fr, im2, cx, cy, a * min(1, pst * 2.5), "mm")
-        for i, (dx, dy) in enumerate(((-110, -36), (100, -30), (-60, 34), (118, 26))):
+        for i, (dx, dy) in enumerate(((-110, -36), (84, -34), (-60, 12), (78, 12))):
             ps2 = prog(t, 9.2 + i * 0.05, 0.5)
             sparkle(fr, cx + dx, cy + dy, 22, a * math.sin(math.pi * ps2))
 
@@ -546,10 +546,10 @@ def scene_cred(fr, t):
         obj3d(fr, md, x + 135, y + 160 + 6 * math.sin(t * 2.3), theta, 14, a * min(1, pm * 2), scale=0.4 + 0.6 * e,
               glow_amt=0.3)
     X = x + 262
-    stagger_text(fr, "AIA CERTIFIED", font("Montserrat", 28, 700), X, y + 46, t, 18.5, tracking=6, per=0.02,
+    stagger_text(fr, "AIA CERTIFIED", font("Montserrat", 28, 700), X, y + 46, t, 18.45, tracking=6, per=0.02,
                  dur=0.35, rise=12, alpha=a, color=GOLD_L)
-    stagger_text(fr, "FinCoach", font("PlayfairDisplay", 70, 700), X, y + 92, t, 19.6, per=0.04, alpha=a)
-    stagger_text(fr, "Practitioner", font("PlayfairDisplay-Italic", 50, 600), X + 2, y + 188, t, 19.85,
+    stagger_text(fr, "FinCoach", font("PlayfairDisplay", 70, 700), X, y + 92, t, 19.1, per=0.04, alpha=a)
+    stagger_text(fr, "Practitioner", font("PlayfairDisplay-Italic", 50, 600), X + 2, y + 188, t, 19.4,
                  fill="gold", per=0.03, alpha=a)
 
 
@@ -692,7 +692,7 @@ def work(args):
     src, a, b, out, guides = args
     frozen = get_frozen(src)
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-                            "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "16",
+                            "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "15",
                             "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-colorspace", "bt709", out], stdin=subprocess.PIPE)
     last_src = SRC_LAST_GOOD + 1
