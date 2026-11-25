@@ -20,7 +20,10 @@ from gfx import _rr_mask
 SRC_LAST_GOOD = 612          # last clean source frame before the phone's "TV-off" glitch
 END_START = 20.45            # end card starts (covers the glitch)
 TOTAL = 22.45
-NFRAMES = int(round(TOTAL * FPS))
+INTRO = 1.5                  # cover / title card before the video starts
+IF = int(round(INTRO * FPS))
+COVER_SRC = 186              # source frame used behind the cover (warm smile, eyes open)
+NFRAMES = int(round(TOTAL * FPS)) + IF
 
 # ------------------------------------------------------------------ camera
 BASE_KEYS = [(0.0, 1.16), (1.5, 1.04), (4.88, 1.09), (5.05, 1.05), (9.78, 1.12), (9.95, 1.04),
@@ -681,7 +684,7 @@ def draw_guides(fr):
 
 
 # ------------------------------------------------------------------ frame
-def render_frame(i, src_rgb, frozen, guides=False):
+def render_body(i, src_rgb, frozen):
     t = i / FPS
     if t >= END_START:
         fr = end_card(t, frozen)
@@ -697,7 +700,7 @@ def render_frame(i, src_rgb, frozen, guides=False):
         img = camera(Image.fromarray(src_rgb), t)
         arr = grade(np.asarray(img))
         # intro: fade from navy
-        fi = 1 - ease_out_cubic(prog(t, 0.0, 0.45))
+        fi = 0.6 * (1 - ease_out_cubic(prog(t, 0.0, 0.3)))
         arr = arr * (1 - fi) + NAVY_F * fi
         fr = Image.fromarray(arr.astype(np.uint8), "RGB").convert("RGBA")
         particles(fr, t, PARTS, 880, 1430, 0.55)
@@ -714,7 +717,92 @@ def render_frame(i, src_rgb, frozen, guides=False):
         if END_START - 0.2 <= t < END_START:  # pre-flash glow
             k = prog(t, END_START - 0.2, 0.2) ** 2 * 0.75
             arr = arr + (np.array([255, 240, 210], np.float32) - arr) * k
-    out = np.clip(arr, 0, 255).astype(np.uint8)
+    return np.clip(arr, 0, 255).astype(np.uint8)
+
+
+# ------------------------------------------------------------------ cover
+_COVER = {}
+
+
+def cover_static(cover_src):
+    if "bg" in _COVER:
+        return _COVER["bg"]
+    img = Image.fromarray(cover_src)
+    a = 1 / 1.1
+    ax, ay = 560, 470
+    img = img.transform((W, H), Image.AFFINE, (a, 0, ax - ax * a, 0, a, ay - ay * a), Image.BICUBIC)
+    arr = grade(np.asarray(img))
+    # navy gradient rising from the bottom for the title block
+    g = np.clip((_yy - 700) / 520, 0, 1) ** 1.3 * 0.93
+    arr = arr * (1 - g[..., None]) + NAVY_F * g[..., None]
+    gl = np.exp(-(((_xx - 512) / 520) ** 2 + ((_yy - 1150) / 260) ** 2))[..., None] * np.array([40, 30, 8], np.float32)
+    arr = np.clip(arr + gl, 0, 255)
+    _COVER["bg"] = Image.fromarray(arr.astype(np.uint8), "RGB")
+    return _COVER["bg"]
+
+
+def render_cover(t, cover_src):
+    """Cover / title card. Frame 0 is already the complete design (used as the thumbnail)."""
+    bg = cover_static(cover_src)
+    z = 1.0 + 0.025 * t / INTRO
+    a = 1 / z
+    bg = bg.transform((W, H), Image.AFFINE, (a, 0, 512 - 512 * a, 0, a, 900 - 900 * a), Image.BILINEAR)
+    fr = bg.convert("RGBA")
+    particles(fr, t + 3, PARTS, 900, 1430, 0.8)
+    cx = 512  # block centred left of the TikTok/Reels button column (x<=905 below y=1000)
+    # small 3D shield above the title
+    sh = shield_obj(132, 158, lq_of(t, -4, 5, 2.2), "check")
+    obj3d(fr, sh, cx, 896, 0.28 * math.sin(t * 2.0 + 0.6), 14, 1.0, glow_amt=0.55)
+    # eyebrow line
+    m, _ = text_mask("HIBAH TAKAFUL", font("Montserrat", 68, 800), tracking=8)
+    ht = colorize(m, WHITE)
+    paste(fr, ht, cx, 1012, 1.0, "mt")
+    # hero number
+    if "rm" not in _COVER:
+        m, _ = text_mask("RM1 JUTA", font("Montserrat", 158, 800), tracking=4)
+        im = relief(m, bevel=4.5, mat="gold", light=(-0.35, -0.75), sheen=0.5)
+        if im.width > 770:
+            im = scaled(im, 770 / im.width)
+        _COVER["rm"] = im
+    rm = shimmer(_COVER["rm"], prog(t, 0.25, 0.9), width=0.14, strength=0.7)
+    g, pad = glow(rm, 24, GOLD, 0.55)
+    paste(fr, g, cx - g.width / 2, 1092 - pad, 1.0)
+    d, pad2 = drop_shadow(rm, 10, (0, 10), 0.55)
+    paste(fr, d, cx - d.width / 2, 1092 - pad2, 1.0)
+    yb = 1092 + rm.height + 6
+    # ornament
+    hline(fr, cx - 300, yb + 8, cx - 22, 0.85, GOLD_L, 2)
+    hline(fr, cx + 22, yb + 8, cx + 300, 0.85, GOLD_L, 2)
+    dm = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    ImageDraw.Draw(dm).polygon([(8, 0), (16, 8), (8, 16), (0, 8)], fill=GOLD_L + (255,))
+    paste(fr, dm, cx, yb + 9, 1.0, "mm")
+    # hook pill
+    if "pill" not in _COVER:
+        tm1 = white_text("Caruman ", font("Montserrat", 30, 500), color=WHITE)
+        tm2 = gold_text("RM130", font("Montserrat", 32, 800))
+        tm3 = white_text(" sebulan sahaja", font("Montserrat", 30, 500), color=WHITE)
+        pw, ph = tm1.width + tm2.width + tm3.width + 64, 72
+        im = pill(pw, ph, fill=(7, 18, 44, 230))
+        x = 32
+        for tmm in (tm1, tm2, tm3):
+            im.alpha_composite(tmm, (x, (ph - tmm.height) // 2))
+            x += tmm.width
+        _COVER["pill"] = im
+    paste(fr, _COVER["pill"], cx, yb + 36, 1.0, "mt")
+    arr = np.asarray(fr.convert("RGB"), np.float32)
+    # exit: gold light sweep + flash into the video
+    arr = light_sweep(arr, prog(t, INTRO - 0.5, 0.5), strength=0.35)
+    k = prog(t, INTRO - 0.18, 0.18) ** 2 * 0.6
+    arr = arr + (np.array([255, 240, 210], np.float32) - arr) * k
+    return np.clip(arr, 0, 255).astype(np.uint8)
+
+
+def render_frame(o, src_rgb, frozen, cover_src, guides=False):
+    """o = output frame index (cover first, then the edited video)."""
+    if o < IF:
+        out = render_cover(o / FPS, cover_src)
+    else:
+        out = render_body(o - IF, src_rgb, frozen)
     if guides:
         g = Image.fromarray(out).convert("RGBA")
         draw_guides(g)
@@ -742,18 +830,25 @@ def get_frozen(src):
         return Image.fromarray(arr.astype(np.uint8), "RGB")
 
 
+def get_cover_src(src):
+    return next(read_frames(src, COVER_SRC, COVER_SRC))
+
+
 def work(args):
     src, a, b, out, guides = args
     frozen = get_frozen(src)
+    cover_src = get_cover_src(src)
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
                             "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "15",
                             "-pix_fmt", "yuv420p", "-color_primaries", "bt709", "-color_trc", "bt709",
                             "-colorspace", "bt709", out], stdin=subprocess.PIPE)
     last_src = SRC_LAST_GOOD + 1
-    src_iter = read_frames(src, a, min(b, last_src)) if a <= last_src else iter(())
-    for i in range(a, b + 1):
-        f = next(src_iter, None) if i <= last_src else None
-        enc.stdin.write(render_frame(i, f, frozen, guides).tobytes())
+    sa, sb = max(0, a - IF), min(b - IF, last_src)
+    src_iter = read_frames(src, sa, sb) if sa <= sb else iter(())
+    for o in range(a, b + 1):
+        i = o - IF
+        f = next(src_iter, None) if 0 <= i <= last_src else None
+        enc.stdin.write(render_frame(o, f, frozen, cover_src, guides).tobytes())
     enc.stdin.close()
     enc.wait()
     return out
@@ -769,12 +864,14 @@ def main():
     args = ap.parse_args()
     if args.still:
         frozen = get_frozen(args.src)
+        cover_src = get_cover_src(args.src)
         for ts in args.still:
-            i = int(round(ts * FPS))
+            o = int(round(ts * FPS))
+            i = o - IF
             f = None
-            if i <= SRC_LAST_GOOD + 1:
+            if 0 <= i <= SRC_LAST_GOOD + 1:
                 f = next(read_frames(args.src, i, i))
-            Image.fromarray(render_frame(i, f, frozen, args.guides)).save(f"{args.out}_{ts:05.2f}.jpg", quality=88)
+            Image.fromarray(render_frame(o, f, frozen, cover_src, args.guides)).save(f"{args.out}_{ts:05.2f}.jpg", quality=88)
         return
     n = NFRAMES
     k = args.workers

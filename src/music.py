@@ -8,7 +8,8 @@ from scipy import signal
 import wave
 
 SR = 48000
-DUR = 22.45
+OFF = 1.5   # cover card before the video
+DUR = 22.45 + OFF
 N = int(SR * DUR)
 t_all = np.arange(N) / SR
 rng = np.random.default_rng(3)
@@ -49,7 +50,7 @@ def reverb(x, secs=2.2, mix=0.35, pre=0.02):
 
 # chord changes aligned to scene changes
 CHORDS = [
-    (0.0, [50, 62, 66, 69, 73, 76]),     # Dmaj9
+    (0.0, [50, 62, 66, 69, 73, 76]),     # Dmaj9 (cover + opening)
     (4.95, [47, 59, 62, 66, 69, 73]),    # Bm9
     (9.85, [43, 55, 59, 62, 66, 73]),    # Gmaj7(#11-ish)
     (12.2, [40, 55, 59, 62, 66, 71]),    # Em9 / G
@@ -57,6 +58,9 @@ CHORDS = [
     (17.65, [45, 57, 61, 64, 69, 73]),   # A (lift)
     (20.45, [38, 50, 62, 66, 69, 76, 81]),  # Dmaj9 resolve
 ]
+
+
+CHORDS = [(0.0 if i == 0 else t + OFF, n) for i, (t, n) in enumerate(CHORDS)]
 
 
 def chord_at(i):
@@ -98,7 +102,7 @@ def sub():
         tt = np.arange(b - a) / SR
         pulse = 0.55 + 0.45 * np.exp(-((tt % beat) / 0.18))
         v = np.sin(2 * np.pi * f * tt) * pulse * np.minimum(1, tt / 0.05)
-        if t0 >= 20.4:
+        if t0 >= 20.4 + OFF:
             v = np.sin(2 * np.pi * f * tt) * np.exp(-tt / 1.4)
         out[a:b] += v * 0.16
     return out
@@ -107,9 +111,9 @@ def sub():
 def pluck_arp():
     out = np.zeros((N, 2))
     step = 60 / 90 / 2
-    t = 0.9
+    t = 0.9 + OFF
     k = 0
-    while t < 20.3:
+    while t < 20.3 + OFF:
         i = max(j for j in range(len(CHORDS)) if CHORDS[j][0] <= t)
         notes = CHORDS[i][1][2:]
         m = notes[[0, 2, 1, 3, 2, 1, 3, 2][k % 8] % len(notes)] + 12
@@ -121,7 +125,7 @@ def pluck_arp():
         a = int(t * SR)
         b = min(N, a + n)
         pan = 0.5 + 0.3 * np.sin(k * 1.3)
-        lvl = 0.05 if t < 4.95 else 0.065
+        lvl = 0.05 if t < 4.95 + OFF else 0.065
         out[a:b, 0] += v[: b - a] * (1 - pan) * lvl
         out[a:b, 1] += v[: b - a] * pan * lvl
         t += step
@@ -132,13 +136,13 @@ def pluck_arp():
 def noise_hits():
     out = np.zeros(N)
     step = 60 / 90 / 2
-    t = 4.95 + step
+    t = 4.95 + OFF + step
     hp = signal.butter(2, 7000 / (SR / 2), "high", output="sos")
-    while t < 20.3:
+    while t < 20.3 + OFF:
         n = int(0.06 * SR)
         v = signal.sosfilt(hp, rng.standard_normal(n)) * np.exp(-np.arange(n) / SR * 70)
         a = int(t * SR)
-        out[a:a + n] += v * (0.035 if int(round((t - 4.95) / step)) % 2 else 0.018)
+        out[a:a + n] += v * (0.035 if int(round((t - 4.95 - OFF) / step)) % 2 else 0.018)
         t += step
     return out
 
@@ -203,22 +207,27 @@ def main(music_path, sfx_path):
     m = reverb(m, 2.4, 0.3)
     # end resolve shimmer
     for k, mm in enumerate([74, 78, 81, 86]):
-        add(m, reverb(bell(midi(mm), 3, 0.06), 3, 0.5), 20.5 + k * 0.12)
+        add(m, reverb(bell(midi(mm), 3, 0.06), 3, 0.5), 20.5 + OFF + k * 0.12)
     # intro / outro fades
     fade = np.ones(N)
-    fade[: int(0.4 * SR)] = np.linspace(0, 1, int(0.4 * SR))
+    fade[: int(0.03 * SR)] = np.linspace(0, 1, int(0.03 * SR))
     fade[-int(0.6 * SR):] = np.linspace(1, 0, int(0.6 * SR)) ** 1.5
     m *= fade[:, None]
     m /= np.max(np.abs(m)) + 1e-9
     write(music_path, m * 0.8)
 
     s = np.zeros((N, 2))
-    for ts in (0.05, 4.88, 9.78, 12.12, 14.8, 17.58):
-        add(s, whoosh(0.6, 250, 5000, 0.22), ts)
+    # cover: impact + shimmer on frame 0, whoosh into the video
+    add(s, impact(0.45), 0.0)
+    for k, mm in enumerate([81, 86, 90]):
+        add(s, bell(midi(mm), 1.6, 0.07), 0.05 + k * 0.08)
+    add(s, whoosh(0.7, 250, 6000, 0.26), OFF - 0.55)
+    for ts in (4.88, 9.78, 12.12, 14.8, 17.58):
+        add(s, whoosh(0.6, 250, 5000, 0.22), ts + OFF)
     for ts, mm in ((0.88, 81), (5.5, 86), (6.86, 88), (9.14, 93), (11.36, 86), (13.3, 81), (16.76, 88), (19.66, 84)):
-        add(s, bell(midi(mm), 2.0, 0.09), ts)
-    add(s, riser(1.7, 0.16), 20.45 - 1.7)
-    add(s, impact(0.55), 20.45)
+        add(s, bell(midi(mm), 2.0, 0.09), ts + OFF)
+    add(s, riser(1.7, 0.16), 20.45 + OFF - 1.7)
+    add(s, impact(0.55), 20.45 + OFF)
     s = reverb(s, 1.6, 0.25)
     write(sfx_path, s)
 
