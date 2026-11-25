@@ -218,15 +218,41 @@ def sparkle(fr, cx, cy, size, a):
 
 
 # ------------------------------------------------------------------ top label
+_TITLE = {}
+
+
+def title_plate():
+    """Persistent title "HIBAH RM1 JUTA": navy glass plate + white/gold 3D type."""
+    if "im" not in _TITLE:
+        f = font("Montserrat", 58, 800)
+        a = white_text("HIBAH", f, tracking=4, color=WHITE)
+        m, _ = text_mask("RM1 JUTA", f, tracking=4)
+        b = relief(m, bevel=2.5, mat="gold", light=(-0.4, -0.75), sheen=0.45)
+        gap = 18
+        tw = a.width + gap + b.width
+        w, h = tw + 84, 100
+        im = pill(w, h, fill=(7, 18, 44, 225), bw=3)
+        ty = (h - a.height) // 2 + 1
+        im.alpha_composite(a, (42, ty))
+        im.alpha_composite(b, (42 + a.width + gap, ty))
+        _TITLE["im"] = im
+    return _TITLE["im"]
+
+
 def top_label(fr, t):
-    a = env(t, 0.4, 20.3, 0.5, 0.25)
+    """Title shown for the whole video (also on the end card). Top edge sits at y=232 (safe zone 220)."""
+    a = env(t, 0.3, TOTAL + 1, 0.5, 0.0)
     if a <= 0:
         return
-    tm = white_text("KISAH PESERTA  •  HIBAH TAKAFUL", font("Montserrat", 23, 600), tracking=4, color=GOLD_L)
-    w, h = tm.width + 56, 54
-    im = pill(w, h, fill=(7, 18, 44, 200))
-    im.alpha_composite(tm, ((w - tm.width) // 2, (h - tm.height) // 2))
-    paste(fr, im, W / 2, 236 + (1 - ease_out_cubic(prog(t, 0.4, 0.5))) * -16, a * 0.95, "mt")
+    im = title_plate()
+    ph = ((t - 1.2) % 4.0) / 1.1  # periodic gold glint
+    im = shimmer(im, ph, width=0.12, strength=0.55)
+    e = ease_out_back(prog(t, 0.3, 0.6))
+    im = scaled(im, 0.85 + 0.15 * e)
+    g, pad = glow(im, 18, GOLD, 0.35)
+    y = 232 + (100 - im.height) / 2
+    paste(fr, g, W / 2 - g.width / 2, y - pad, a * 0.9)
+    paste(fr, im, W / 2, y, a, "mt")
 
 
 # ------------------------------------------------------------------ scenes
@@ -557,6 +583,23 @@ def scene_cred(fr, t):
 _END_BG = {}
 
 
+def chat_icon(s):
+    """Generic chat-bubble + handset icon in navy (not a brand logo)."""
+    n = s * 4
+    m = Image.new("L", (n, n), 0)
+    d = ImageDraw.Draw(m)
+    d.ellipse((n * 0.06, n * 0.06, n * 0.94, n * 0.94), fill=255)
+    d.polygon([(n * 0.12, n * 0.97), (n * 0.2, n * 0.68), (n * 0.38, n * 0.86)], fill=255)
+    d.ellipse((n * 0.16, n * 0.16, n * 0.84, n * 0.84), fill=0)
+    d.polygon([(n * 0.17, n * 0.86), (n * 0.23, n * 0.72), (n * 0.3, n * 0.8)], fill=0)
+    # handset
+    d.rounded_rectangle((n * 0.32, n * 0.3, n * 0.46, n * 0.44), radius=n * 0.04, fill=255)
+    d.rounded_rectangle((n * 0.56, n * 0.56, n * 0.7, n * 0.7), radius=n * 0.04, fill=255)
+    d.line((n * 0.38, n * 0.4, n * 0.62, n * 0.64), fill=255, width=int(n * 0.09))
+    m = m.resize((s, s), Image.LANCZOS)
+    return colorize(m, NAVY)
+
+
 def end_card(t, frozen):
     te = t - END_START
     key = "bg"
@@ -605,14 +648,25 @@ def end_card(t, frozen):
         paste(fr, dm, cx, 1069, pl, "mm")
     stagger_text(fr, "Hibah  •  Takaful  •  Perlindungan Keluarga", font("Montserrat", 25, 500), cx, 1092,
                  te, 0.8, per=0.008, dur=0.3, rise=10, anchor="m", color=(235, 238, 246))
-    pb = prog(te, 1.0, 0.45)
+    pb = prog(te, 1.0, 0.5)
     if pb > 0:
-        bw, bh = 470, 76
-        im = pill(bw, bh, fill=(7, 18, 44, 220))
-        tm = white_text("Hubungi saya hari ini", font("Montserrat", 29, 600), color=GOLD_L)
-        im.alpha_composite(tm, ((bw - tm.width) // 2, (bh - tm.height) // 2))
-        paste(fr, scaled(im, 0.85 + 0.15 * ease_out_back(pb)), cx, 1190, min(1, pb * 2), "mm")
-    stagger_text(fr, "AIA CERTIFIED FINCOACH PRACTITIONER", font("Montserrat", 21, 600), cx, 1266, te, 1.2,
+        bw, bh = 600, 104
+        btn = relief(_rr_mask(bw, bh, bh // 2), bevel=10, mat="gold", light=(lq_of(t, -3, 6, 2.2) / 10, -0.75),
+                     sheen=0.45)
+        ic = chat_icon(46)
+        tm = colorize(text_mask("KLIK WHATSAPP SEKARANG", font("Montserrat", 31, 800), tracking=1)[0], NAVY)
+        x0 = (bw - (ic.width + 14 + tm.width)) // 2
+        btn.alpha_composite(ic, (x0, (bh - ic.height) // 2))
+        btn.alpha_composite(tm, (x0 + ic.width + 14, (bh - tm.height) // 2))
+        btn = shimmer(btn, ((te - 1.3) % 1.4) / 1.0, width=0.15, strength=0.6)
+        pulse = 1 + 0.035 * math.sin(max(0, te - 1.5) * 6.0) if te > 1.5 else 1.0
+        im = scaled(btn, (0.6 + 0.4 * ease_out_back(pb)) * pulse)
+        g, pad = glow(im, 24, GOLD, 0.9)
+        paste(fr, g, cx - g.width / 2, 1190 - g.height / 2, min(1, pb * 2))
+        d, pad2 = drop_shadow(im, 14, (0, 14), 0.5)
+        paste(fr, d, cx - d.width / 2, 1190 - d.height / 2, min(1, pb * 2))
+    top_label(fr, t)
+    stagger_text(fr, "AIA CERTIFIED FINCOACH PRACTITIONER", font("Montserrat", 21, 600), cx, 1272, te, 1.2,
                  tracking=4, per=0.006, dur=0.3, rise=8, anchor="m", color=GOLD_L, alpha=0.85)
     return fr
 
