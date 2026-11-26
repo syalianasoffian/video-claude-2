@@ -8,7 +8,7 @@ import json, os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DURATION = 29.0
+DURATION = 36.6
 
 # (scene id, out_start, src_start, src_end, [(word, src_s, src_e), ...])
 CLIPS = [
@@ -20,15 +20,20 @@ CLIPS = [
         ("kita", 59.94, 60.06), ("bayar", 60.06, 60.42), ("rumah,", 60.42, 60.68)]),
     ("money", 6.00, 62.10, 64.00, [
         ("kita", 62.14, 62.86), ("bayar", 62.86, 63.30), ("kereta...", 63.30, 63.92)]),
-    ("hospital", 8.20, 116.93, 120.15, [
-        ("kita", 116.90, 117.24), ("menghadapi", 117.24, 117.98),
-        ("sakit", 117.98, 118.72), ("hospitalisasi.", 118.72, 120.04)]),
-    ("risk", 11.80, 144.40, 148.98, [
+    ("risk", 8.20, 144.40, 148.98, [
         ("Bila-bila", 144.44, 145.54), ("salah", 145.54, 146.14), ("satu", 146.14, 147.06),
         ("musibah", 147.06, 148.16), ("ini", 148.16, 148.40), ("berlaku,", 148.40, 148.92)]),
-    ("shield", 16.73, 227.85, 237.60, [
-        ("tembok", 227.90, 228.46), ("ini,", 228.46, 228.76),
-        ("perlindungan", 229.00, 229.70), ("takaful", 229.70, 230.22), ("ini", 230.22, 230.50),
+    ("fall", 12.98, 184.88, 190.36, [
+        ("batu-batu", 184.92, 185.58), ("berat", 185.58, 185.84), ("ini", 185.84, 186.10),
+        ("menimpa", 186.10, 186.94), ("ke", 186.94, 187.16), ("atas", 187.16, 187.60),
+        ("isteri", 187.60, 188.08), ("kita,", 188.08, 188.50), ("anak-anak", 188.50, 189.96), ("kita.", 189.96, 190.28)]),
+    ("wall", 18.70, 171.58, 178.30, [
+        ("Oleh", 171.62, 172.12), ("itu,", 172.12, 172.56), ("itulah", 173.10, 174.12),
+        ("pentingnya", 174.12, 175.10), ("kita", 175.10, 175.48), ("ada", 175.48, 175.88),
+        ("tembok", 175.88, 176.54), ("di", 176.54, 177.10), ("kanan", 177.10, 177.54),
+        ("dan", 177.54, 177.72), ("kiri.", 177.72, 178.22)]),
+    ("shield", 25.60, 228.95, 237.60, [
+        ("Perlindungan", 229.00, 229.70), ("takaful", 229.70, 230.22), ("ini", 230.22, 230.50),
         ("yang", 230.50, 230.72), ("akan", 230.72, 231.04), ("menahan", 231.04, 231.94),
         ("semua", 231.94, 233.04), ("beban", 233.04, 233.60), ("komitmen", 233.60, 234.32),
         ("ini", 234.32, 234.62), ("daripada", 234.62, 235.16), ("menimpa", 235.16, 235.90),
@@ -40,14 +45,15 @@ PAGES = {
     "family": [0, 5],
     "house": [0],
     "money": [0],
-    "hospital": [0],
     "risk": [0, 3],
-    "shield": [0, 2, 5, 8, 12, 14],
+    "fall": [0, 4, 6],
+    "wall": [0, 2, 6],
+    "shield": [0, 3, 6, 10, 12],
 }
 
-KEY_WORDS = {"ibu", "ayah,", "keluarga", "rumah,", "kereta...", "hospitalisasi.",
-             "musibah", "tembok", "perlindungan", "takaful", "beban", "komitmen",
-             "keluarga", "menahan"}
+KEY_WORDS = {"ibu", "ayah,", "keluarga", "rumah,", "kereta...", "musibah", "menimpa",
+             "isteri", "anak-anak", "tembok", "kanan", "kiri.", "Perlindungan", "takaful",
+             "beban", "komitmen", "menahan", "batu-batu"}
 
 
 def build():

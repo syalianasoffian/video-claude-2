@@ -25,9 +25,9 @@ const guides = new URLSearchParams(location.search).has('guides');
 const T = {
   family: .9, ibu: 1.55, ayah: 2.0, ketua: 3.15, tray: 3.55,
   house: 4.72, rumah: 5.45, houseToStone: 5.85, money: 6.0, kereta: 7.2,
-  hosp: 7.95, hospOut: 11.6, risk: 11.6, musibah: 14.46, berlaku: 15.8,
-  tembok: 16.75, perlindungan: 17.88, takaful: 18.58, menahan: 19.91, semua: 20.81, beban: 21.9,
-  keluarga: 24.78, outro: 26.45, end: 29.0,
+  hosp: 999, hospOut: 999, risk: 7.95, berlaku: 12.6, fall: 12.95, menimpa: 14.2, isteri: 15.7, rewind: 18.75,
+  tembok: 23.0, kanan: 24.2, kiri: 24.8, perlindungan: 25.6, toDome: 26.9, semua: 28.55, beban: 29.63,
+  keluarga: 32.5, outro: 34.1, end: 36.6,
 };
 
 // ---------- renderer ----------
@@ -125,7 +125,7 @@ const DOME_C = new THREE.Vector3(0, .5, 0), DOME_S = new THREE.Vector3(1.12, 1.0
 const EXTRA = [-.62, -.22, .2, .6].map((x, i) => {
   const y = DOME_C.y + DOME_S.y * Math.sqrt(1 - (x / DOME_S.x) ** 2) + .1;
   const m = new THREE.Mesh(stoneGeo(), M.stone); m.scale.setScalar(1.15); stack.add(m);
-  return { mesh: m, x, y, t: 20.95 + i * .3 };
+  return { mesh: m, x, y, t: 29.0 + i * .3 };
 });
 
 // walls (tembok) + dome
@@ -261,22 +261,24 @@ const CHIPS = [
   [mkChip('Ibu · Ayah', 'family'), L, Y0, T.ibu, T.house - .1, -1],
   [mkChip('Ketua Keluarga', 'person'), L, Y0 + DY, T.ketua, T.house - .1, -1],
   [mkChip('Pembiayaan Rumah', 'home'), L, Y0 + 170, T.rumah - .15, T.money + .35, -1],
-  [mkChip('Hospitalisasi', 'hosp'), L, Y0, 9.0, T.hospOut, -1],
-  [mkChip('Hospitalisasi', 'hosp', 'warn'), L, Y0, 12.3, T.tembok - .1, -1],
-  [mkChip('Penyakit Kritikal', 'heart', 'warn'), L, Y0 + DY, 13.0, T.tembok - .1, -1],
-  [mkChip('TPD', 'person', 'warn'), L, Y0 + DY * 2, 13.7, T.tembok - .1, -1],
-  [mkChip('Kematian', 'leaf', 'warn'), L, Y0 + DY * 3, 14.4, T.tembok - .1, -1],
-  [mkChip('Hibah', 'shield'), L, Y0, 19.0, T.outro, -1],
-  [mkChip('Sakit Kritikal', 'heart'), L, Y0 + DY, 19.55, T.outro, -1],
-  [mkChip('Medical Card', 'card'), L, Y0 + DY * 2, 20.1, T.outro, -1],
+  [mkChip('Hospitalisasi', 'hosp', 'warn'), L, Y0, 8.6, T.fall - .1, -1],
+  [mkChip('Penyakit Kritikal', 'heart', 'warn'), L, Y0 + DY, 9.3, T.fall - .1, -1],
+  [mkChip('TPD', 'person', 'warn'), L, Y0 + DY * 2, 10.0, T.fall - .1, -1],
+  [mkChip('Kematian', 'leaf', 'warn'), L, Y0 + DY * 3, 10.8, T.fall - .1, -1],
+  [mkChip('Isteri · Anak-anak', 'family', 'warn'), L, Y0, T.isteri, T.rewind, -1],
+  [mkChip('Tembok Kanan', 'shield'), L, Y0, T.kanan, T.perlindungan - .1, -1],
+  [mkChip('Tembok Kiri', 'shield'), L, Y0 + DY, T.kiri, T.perlindungan - .1, -1],
+  [mkChip('Hibah', 'shield'), L, Y0, 27.6, T.outro, -1],
+  [mkChip('Sakit Kritikal', 'heart'), L, Y0 + DY, 28.1, T.outro, -1],
+  [mkChip('Medical Card', 'card'), L, Y0 + DY * 2, 28.6, T.outro, -1],
 ];
 const headlines = [
   [0, T.family + 0.05, 'TAKAFUL 101', 'Kenapa takaful penting?'],
   [T.family + .05, T.house, '01 · TANGGUNGJAWAB', 'Ketua keluarga'],
-  [T.house, T.hosp, '02 · KOMITMEN', 'Beban setiap bulan'],
-  [T.hosp, T.risk, '03 · RISIKO', 'Bila kita sakit'],
-  [T.risk, T.tembok - .05, '04 · UJIAN HIDUP', 'Bila musibah berlaku'],
-  [T.tembok - .05, T.outro, '05 · PERLINDUNGAN', 'Takaful sebagai tembok'],
+  [T.house, T.risk, '02 · KOMITMEN', 'Beban setiap bulan'],
+  [T.risk, T.fall, '03 · UJIAN HIDUP', 'Bila musibah berlaku'],
+  [T.fall, T.rewind, '04 · KESANNYA', 'Beban menimpa keluarga'],
+  [T.rewind, T.outro, '05 · PERLINDUNGAN', 'Takaful sebagai tembok'],
 ];
 $('headline').innerHTML = headlines.map(h => `<div class="h"><div class="k">${h[2]}</div><span>${h[3]}</span></div>`).join('');
 const hEls = [...$('headline').children];
@@ -319,8 +321,9 @@ function setEl(el, x, y, s, o, extra = '') { el.style.transform = `translate(${x
 // ---------- camera path ----------
 const CAM = [
   [0, [0, .9, 13.5]], [.9, [0, .25, 11]], [3.5, [.9, .55, 11.3]], [4.7, [0, .35, 11.2]], [6.0, [-.7, .7, 11.6]],
-  [7.95, [-.4, .55, 11.4]], [8.0, [.9, .55, 10.2]], [11.55, [-.6, .4, 10.4]], [11.6, [0, .3, 11.4]], [15.9, [0, .15, 10.6]],
-  [16.7, [0, .55, 12.6]], [20.2, [.8, .55, 12.3]], [24, [-.6, .35, 11.8]], [26.4, [0, .3, 12.2]], [29, [0, .2, 12.9]],
+  [7.95, [-.4, .55, 11.4]], [12.8, [0, .2, 10.6]], [14.2, [.5, .45, 11.2]], [18.5, [-.4, .3, 10.8]],
+  [20.2, [0, .5, 12.4]], [23.0, [.5, .5, 12.5]], [25.5, [0, .55, 12.6]], [28.5, [.8, .55, 12.3]],
+  [32, [-.6, .35, 11.8]], [34.1, [0, .3, 12.2]], [36.6, [0, .2, 12.9]],
 ];
 function camAt(t) {
   let i = 0; while (i < CAM.length - 2 && t > CAM[i + 1][0]) i++;
@@ -331,7 +334,7 @@ function camAt(t) {
 
 // ---------- per-frame ----------
 function vis(o, s) { o.visible = s > .001; o.scale.setScalar(Math.max(s, .0001)); }
-const tmp = new THREE.Vector3();
+const tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3();
 function toPx(obj, local = [0, 0, 0]) { tmp.set(...local); obj.localToWorld(tmp); tmp.project(camera);
   return [(tmp.x * .5 + .5) * W, (-tmp.y * .5 + .5) * H]; }
 
@@ -343,16 +346,15 @@ window.renderAt = function (t) {
 
   // camera + shake
   const [cx, cy, cz] = camAt(t);
-  const shake = Math.max(win(t, 15.2, 16.3, .3, .3) * .05, Math.exp(-Math.max(0, t - T.tembok) * 8) * (t >= T.tembok ? .06 : 0),
-                         t > 21 && t < 22.4 ? .02 * Math.abs(Math.sin(t * 40)) : 0);
+  const shake = Math.max(win(t, 11.5, 14.2, 1.5, .1) * .025, Math.exp(-Math.max(0, t - T.menimpa) * 4) * (t >= T.menimpa ? .09 : 0), Math.exp(-Math.max(0, t - T.perlindungan) * 8) * (t >= T.perlindungan ? .06 : 0),
+                         t > 29 && t < 30.4 ? .02 * Math.abs(Math.sin(t * 40)) : 0);
   camera.position.set((cx + Math.sin(t * 47) * shake) * CAM_K, (cy + Math.cos(t * 53) * shake) * CAM_K, cz * CAM_K);
   camera.lookAt(0, 0, 0);
 
   // ---- stack visibility: in from family, hidden during hospital, out at outro
-  const stackIn = Math.min(outBack(P(t, T.family - .1, T.family + .55), 1.2), 1 - ease(P(t, T.hosp - .15, T.hosp)), 1);
-  const stackBack = outBack(P(t, T.risk - .05, T.risk + .5), 1.1);
+  const stackIn = outBack(P(t, T.family - .1, T.family + .55), 1.2);
   const stackOut = 1 - ease(P(t, T.outro, T.outro + .55));
-  const ss = (t < T.hosp ? stackIn : t < T.risk ? 0 : stackBack * stackOut);
+  const ss = stackIn * stackOut;
   vis(stack, ss);
   stack.position.set(0, -.62 + (t > T.outro ? -ease(P(t, T.outro, T.outro + .55)) * .6 : 0), 0);
   stack.rotation.y = Math.sin(t * .5) * .22 + (1 - ss) * 1.2 + (t < 2 ? (1 - outExpo(P(t, T.family, 2))) * -1.4 : 0);
@@ -361,8 +363,9 @@ window.renderAt = function (t) {
   family.forEach((f, i) => {
     const d = f.userData; const pop = outBack(P(t, T.family + .1 + i * .12, T.family + .55 + i * .12), 2);
     const breathe = 1 + Math.sin(t * 3 + i) * .015;
-    const crush = t > T.risk && t < T.tembok + .3 ? 1 - .1 * win(t, 15.3, T.tembok + .3, .5, .3) : 1;
-    f.scale.set(pop, pop * breathe * (i < 2 ? crush : 1), pop);
+    const crush = 1 - (i < 2 ? .22 : .32) * win(t, T.menimpa + .15 + i * .1, T.rewind + 1.0, .35, .8, outBack);
+    f.scale.set(pop * (2 - crush) ** .5, pop * breathe * crush, pop);
+    f.rotation.z = (1 - crush) * (i % 2 ? .25 : -.25);
     const parentHi = i === 0 ? win(t, T.ibu + .4, T.house, .25, .3) : i === 1 ? win(t, T.ibu, T.house, .25, .3) : 0;
     const famHi = win(t, T.keluarga - .1, T.outro + .3, .4, .4);
     d.halo.material.opacity = Math.max(parentHi * .9, famHi * .9 * (.75 + .25 * Math.sin(t * 6 + i)));
@@ -374,11 +377,13 @@ window.renderAt = function (t) {
   // tray
   const trayIn = outBack(P(t, T.tray, T.tray + .5), 1.4);
   vis(tray, trayIn);
-  const risk = win(t, 14.2, T.tembok + .15, 1.4, .25, ease);
+  const risk = win(t, T.risk + .3, T.menimpa + .1, 3.5, .2, ease);
   const sag = risk * (.06 + .02 * Math.sin(t * 9));
-  tray.position.set(0, TRAY_Y + (1 - trayIn) * .9 - sag - .08 * win(t, 15.35, T.tembok + .2, .25, .3), 0);
-  tray.rotation.z = risk * .07 * Math.sin(t * 7.3) + risk * .05;
+  const tip = win(t, T.menimpa - .15, T.rewind + 1.2, .45, 1.0, outBack);   // tray tips over and drops
+  tray.position.set(0, TRAY_Y + (1 - trayIn) * .9 - sag - .25 * tip, 0);
+  tray.rotation.z = risk * .07 * Math.sin(t * 7.3) + risk * .05 + tip * .42;
   tray.rotation.x = risk * .03 * Math.sin(t * 5.1);
+  stack.updateMatrixWorld(true);
 
   // stones
   STONES.forEach((s, i) => {
@@ -386,9 +391,17 @@ window.renderAt = function (t) {
     s.mesh.visible = vis0;
     const [x, y, z] = s.p; const fall = outBounce(k);
     s.mesh.position.set(x, lerp(y + 1.6, y, fall), z);
+    // crash onto the family, then rewind back into the bowl
+    const dk = Math.min(P(t, T.menimpa + i * .1, T.menimpa + .7 + i * .1), 1 - ease(P(t, T.rewind + .1 + i * .06, T.rewind + 1.1 + i * .06)));
+    if (dk > 0) {
+      const tgt = tmp2.set(-.75 + i * .21, .12 + (i % 3) * .13 + (i === 2 || i === 5 ? .35 : 0), .35 - (i % 2) * .5);
+      stack.localToWorld(tgt); tray.worldToLocal(tgt);
+      const up = t < T.rewind + .1 ? outBounce(dk) : ease(dk);
+      s.mesh.position.set(lerp(x, tgt.x, up), lerp(y, tgt.y, up) + Math.sin(dk * Math.PI) * (t < T.rewind ? .15 : .4), lerp(z, tgt.z, up));
+    }
     s.mesh.scale.setScalar(i === 0 ? lerp(1.6, 1, outExpo(k)) : 1);
     s.mesh.rotation.y = s.spin * t * .3 + (1 - k) * 4;
-    if (s.el) { const [px, py] = toPx(s.mesh, [0, .2, 0]); const o = win(t, s.t + .15, T.hosp, .3, .2) * (stack.visible ? 1 : 0);
+    if (s.el) { const [px, py] = toPx(s.mesh, [0, .2, 0]); const o = win(t, s.t + .15, T.risk, .3, .2) * (stack.visible ? 1 : 0);
       s.el.style.opacity = o; s.el.style.transform = `translate(-50%,-50%) translate(${clamp(px, 640, 1220)}px, ${clamp(py - 30 - (i % 2) * 26, 40, 700)}px) scale(${.9 + .1 * outBack(P(t, s.t + .15, s.t + .45))})`; }
   });
   EXTRA.forEach(e => { const k = P(t, e.t, e.t + .5); e.mesh.visible = t >= e.t && stack.visible;
@@ -400,16 +413,16 @@ window.renderAt = function (t) {
     c.mesh.rotation.set(Math.PI / 2 + k * 6, k * 9 * c.s, 0); c.mesh.scale.setScalar(Math.sin(k * Math.PI) * .6 + .5); });
 
   // waves
-  const wAmp = .012 + .05 * win(t, T.risk, T.tembok + .4, 1, .6, ease) + .02 * win(t, 15.2, 16.4, .3, .4);
+  const wAmp = .012 + .05 * win(t, T.risk, T.tembok + .4, 1, .6, ease) + .03 * win(t, T.menimpa, T.rewind, .3, .6);
   setWave(wave, t, wAmp * (t > T.tembok ? lerp(1, .3, P(t, T.tembok, T.tembok + 1)) : 1), 0);
   setWave(wave2, t + .3, wAmp * .8, 1.7);
   wave.material.opacity = wave2.material.opacity = .25 + .75 * win(t, T.family + .5, T.outro, .6, .4);
 
   // walls + dome
-  walls.forEach((w, i) => { const k = outBack(P(t, T.tembok + i * .08, T.tembok + .45 + i * .08), 1.6); vis(w, k); w.scale.set(1, Math.max(k, .001), 1); });
-  const dk = outExpo(P(t, 19.35, 20.0));
+  walls.forEach((w, i) => { const wt = i ? T.kanan : T.kiri; const k = outBack(P(t, wt, wt + .45), 1.6); vis(w, k); w.scale.set(1, Math.max(k, .001), 1); });
+  const dk = outExpo(P(t, T.toDome + .2, T.toDome + .85));
   dome.visible = dk > .01; dome.scale.set(DOME_S.x * dk, DOME_S.y * dk, DOME_S.z * dk);
-  domeMat.opacity = .1 + .1 * Math.max(0, Math.sin(t * 2)); hexMat.opacity = .22 + .25 * win(t, 20.9, 22.6, .2, .6) + .1 * Math.sin(t * 3);
+  domeMat.opacity = .1 + .1 * Math.max(0, Math.sin(t * 2)); hexMat.opacity = .22 + .25 * win(t, 29.0, 30.6, .2, .6) + .1 * Math.sin(t * 3);
   dome.rotation.y = t * .15;
   pRing.material.color.setHSL(.58, 1, .72 + .1 * Math.sin(t * 4));
 
@@ -428,7 +441,7 @@ window.renderAt = function (t) {
 
   // shield emblem: hero in front at "perlindungan takaful", then dissolves into the dome; hero again in outro
   const shIn = outBack(P(t, T.perlindungan - .1, T.perlindungan + .55), 1.3);
-  const toDome = ease(P(t, 19.15, 19.75));
+  const toDome = ease(P(t, T.toDome, T.toDome + .6));
   const outroK = ease(P(t, T.outro, T.outro + .7));
   let shs, sy, sz;
   if (t < T.outro) { shs = shIn * lerp(.55, .2, toDome) * (1 - toDome); sy = lerp(.1, .75, toDome); sz = lerp(1.6, 0, toDome); }
@@ -467,7 +480,7 @@ window.renderAt = function (t) {
   });
 
   // infographic bar
-  const bk = win(t, T.money - .25, T.hosp + .05, .45, .3);
+  const bk = win(t, T.money - .25, T.risk + .05, .45, .3);
   setEl($('bar'), 0, (1 - outExpo(P(t, T.money - .25, T.money + .2))) * 40, 1, bk);
   segEls.forEach((el, i) => el.style.width = (SEGW[i] * 100 * outExpo(P(t, SEGS[i][2], SEGS[i][2] + .4))) + '%');
 
@@ -483,7 +496,7 @@ window.renderAt = function (t) {
   }
 
   // flash on wall impact
-  $('flash').style.opacity = .55 * Math.exp(-Math.max(0, t - T.tembok) * 6) * (t >= T.tembok ? 1 : 0) + .35 * Math.exp(-Math.max(0, t - T.outro - .3) * 5) * (t >= T.outro + .3 ? 1 : 0);
+  $('flash').style.opacity = .45 * Math.exp(-Math.max(0, t - T.perlindungan) * 6) * (t >= T.perlindungan ? 1 : 0) + .3 * Math.exp(-Math.max(0, t - T.menimpa) * 7) * (t >= T.menimpa ? 1 : 0) + .35 * Math.exp(-Math.max(0, t - T.outro - .3) * 5) * (t >= T.outro + .3 ? 1 : 0);
 
   // end card
   const endk = outExpo(P(t, T.outro + .3, T.outro + 1.0));

@@ -171,18 +171,23 @@ def main():
     put(whoosh(0.5), 4.6, 0.45, 0.7); put(boom(0.9, 60), 5.0, 0.55)        # house lands
     put(ding(1320), 5.35, 0.7)
     for i in range(9): put(coin(2400 + 180 * (i % 3)), 6.1 + i * 0.2, 0.9, 0.3 + 0.05 * i)
-    put(whoosh(0.6), 7.95, 0.5, 0.3); put(boom(0.8, 70), 8.35, 0.4); put(ding(1568), 8.5, 0.55)
-    put(pop(990), 10.2, 0.7)
-    put(whoosh(0.6, False), 11.5, 0.5, 0.6); put(rumble(4.6), 11.8, 0.55)
-    for i, tt in enumerate([12.4, 13.1, 13.8, 14.5]): put(pop(620 - 40 * i, 0.16), tt, 0.9, 0.2 + 0.2 * i)
-    put(thud(), 15.4, 0.6, 0.3); put(thud(), 15.8, 0.6, 0.7)
-    put(riser(1.0), 15.75, 0.55)
-    put(boom(1.4, 46), 16.75, 0.8); put(shimmer(2.6, 880), 16.78, 1.0)
-    put(whoosh(0.5), 17.3, 0.4, 0.2); put(whoosh(0.5), 17.45, 0.4, 0.8)
-    for i, tt in enumerate([19.0, 19.55, 20.1]): put(ding(1046 * 1.122 ** i, 0.7), tt, 0.7, 0.3 + 0.2 * i)
-    for i, tt in enumerate([21.2, 21.5, 21.8, 22.1]): put(thud(0.4), tt, 0.55, 0.3 + 0.13 * i)
-    put(shimmer(2.0, 1175), 24.75, 0.8)
-    put(whoosh(0.7), 26.35, 0.55); put(boom(1.2, 55), 26.75, 0.45); put(shimmer(2.2, 1318), 26.8, 0.9)
+    # risk: "bila-bila salah satu musibah ini berlaku"
+    put(whoosh(0.6, False), 7.9, 0.5, 0.6); put(rumble(6.3), 8.2, 0.55)
+    for i, tt in enumerate([8.6, 9.3, 10.0, 10.8]): put(pop(620 - 40 * i, 0.16), tt, 0.9, 0.3)
+    # fall: stones crash onto the family
+    put(riser(0.9), 13.3, 0.45); put(boom(1.4, 44), 14.2, 0.85)
+    for i in range(8): put(thud(0.45), 14.3 + i * 0.12, 0.6, 0.3 + 0.05 * i)
+    put(pop(560, 0.16), 15.7, 0.8, 0.3)
+    # rewind + walls
+    put(whoosh(1.1, True), 18.8, 0.5); put(shimmer(1.4, 988), 19.6, 0.5)
+    put(boom(1.1, 50), 24.2, 0.7, 0.75); put(whoosh(0.4), 24.0, 0.4, 0.8)
+    put(boom(1.1, 50), 24.8, 0.7, 0.25); put(whoosh(0.4), 24.6, 0.4, 0.2)
+    # shield
+    put(riser(0.6), 25.0, 0.4); put(boom(1.4, 46), 25.6, 0.7); put(shimmer(2.6, 880), 25.62, 1.0)
+    for i, tt in enumerate([27.6, 28.1, 28.6]): put(ding(1046 * 1.122 ** i, 0.7), tt, 0.7, 0.3 + 0.2 * i)
+    for i in range(4): put(thud(0.4), 29.0 + i * 0.3, 0.55, 0.3 + 0.13 * i)
+    put(shimmer(2.0, 1175), 32.5, 0.8)
+    put(whoosh(0.7), 33.95, 0.55); put(boom(1.2, 55), 34.4, 0.45); put(shimmer(2.2, 1318), 34.45, 0.9)
 
     mus = music(total)
     # sidechain-style ducking under voice
