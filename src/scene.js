@@ -260,7 +260,7 @@ const L = 60, Y0 = 290, DY = 64;
 const CHIPS = [
   [mkChip('Ibu · Ayah', 'family'), L, Y0, T.ibu, T.house - .1, -1],
   [mkChip('Ketua Keluarga', 'person'), L, Y0 + DY, T.ketua, T.house - .1, -1],
-  [mkChip('Pembiayaan Rumah', 'home'), L, Y0 + 170, T.rumah - .15, T.money + .35, -1],
+  [mkChip('Pembiayaan Rumah', 'home'), L, Y0 + DY * 2 + 10, T.rumah - .15, T.money + .1, -1],
   [mkChip('Hospitalisasi', 'hosp', 'warn'), L, Y0, 8.6, T.fall - .1, -1],
   [mkChip('Penyakit Kritikal', 'heart', 'warn'), L, Y0 + DY, 9.3, T.fall - .1, -1],
   [mkChip('TPD', 'person', 'warn'), L, Y0 + DY * 2, 10.0, T.fall - .1, -1],

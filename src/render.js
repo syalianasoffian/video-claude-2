@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
     const fps = tl.fps, from = +(opt('--from') || 0), to = +(opt('--to') || tl.duration);
     const out = opt('--out') || path.join(ROOT, 'build/video_noaudio.mp4');
     const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'mjpeg', '-i', '-',
-      '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', out], { stdio: ['pipe', 'inherit', 'inherit'] });
+      '-c:v', 'libx264', '-preset', 'slow', '-crf', '15', '-pix_fmt', 'yuv420p', out], { stdio: ['pipe', 'inherit', 'inherit'] });
     const n = Math.round((to - from) * fps), t0 = Date.now();
     for (let f = 0; f < n; f++) {
       const t = from + f / fps;
