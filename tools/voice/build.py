@@ -140,8 +140,8 @@ def duck_points(lines, total):
         else: spans.append([s, e])
     pts = [{"t": 0, "v": 1.0}]
     for s, e in spans:
-        pts += [{"t": round(max(0, s), 3), "v": 1.0}, {"t": round(s + 0.12, 3), "v": 0.55},
-                {"t": round(e, 3), "v": 0.55}, {"t": round(e + 0.25, 3), "v": 1.0}]
+        pts += [{"t": round(max(0, s), 3), "v": 1.0}, {"t": round(s + 0.12, 3), "v": 0.45},
+                {"t": round(e, 3), "v": 0.45}, {"t": round(e + 0.25, 3), "v": 1.0}]
     pts.append({"t": round(total, 3), "v": 1.0})
     return pts
 
@@ -152,7 +152,7 @@ def make_sfx(cues, lines):
     S = lambda sid: cues[sid]["start"]
     out = []
     SOFT = {"heartbeat.wav": 0.4, "sparkle.mp3": 0.6, "chime.mp3": 0.45, "impact-bass-2.mp3": 0.8, "chk.wav": 0.45, "pops10.wav": 0.7}
-    add = lambda f, t, v=0.35: out.append((f, max(0.0, round(t, 3)), round(v * 0.62 * SOFT.get(f, 1.0), 3)))
+    add = lambda f, t, v=0.35: out.append((f, max(0.0, round(t, 3)), round(v * 0.45 * SOFT.get(f, 1.0), 3)))
     # hook
     add("impact-bass-1.mp3", 0.0, 0.45)
     add("brush.wav", A("hook", "senang") - 0.02, 0.5)
@@ -198,7 +198,7 @@ def make_sfx(cues, lines):
     add("reverse.wav", S("keyman") - 0.85, 0.4)
     add("pop.mp3", A("keyman", "keyman"), 0.4)
     add("brush.wav", A("keyman", "policy") - 0.05, 0.4)
-    add("whoosh-short.mp3", A("keyman", "tiga") - 0.15, 0.3)
+    add("whoosh-short.mp3", A("keyman", "ketigatiga") - 0.15, 0.3)
     k3 = A("keyman", "kerisauan")
     for i in range(3): add("chk.wav", k3 + 0.15 + i * 0.16, 0.45)
     add("whoosh.mp3", A("keyman", "peace") - 0.75, 0.3)
