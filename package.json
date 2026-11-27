@@ -19,6 +19,8 @@
   "homepage": "https://github.com/syalianasoffian/video-claude-2#readme",
   "dependencies": {
     "@fontsource/inter": "^5.1.0",
+    "@fontsource/montserrat": "^5.1.0",
+    "@fontsource/playfair-display": "^5.1.0",
     "three": "^0.170.0"
   }
 }

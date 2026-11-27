@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Medical Card Premium</title>
+<style>
+@font-face { font-family: Play; font-weight: 700; src: url(/node_modules/@fontsource/playfair-display/files/playfair-display-latin-700-normal.woff2); }
+@font-face { font-family: Play; font-weight: 800; src: url(/node_modules/@fontsource/playfair-display/files/playfair-display-latin-800-normal.woff2); }
+@font-face { font-family: Play; font-weight: 900; src: url(/node_modules/@fontsource/playfair-display/files/playfair-display-latin-900-normal.woff2); }
+@font-face { font-family: Play; font-weight: 700; font-style: italic; src: url(/node_modules/@fontsource/playfair-display/files/playfair-display-latin-700-italic.woff2); }
+@font-face { font-family: Play; font-weight: 900; font-style: italic; src: url(/node_modules/@fontsource/playfair-display/files/playfair-display-latin-900-italic.woff2); }
+@font-face { font-family: Mont; font-weight: 500; src: url(/node_modules/@fontsource/montserrat/files/montserrat-latin-500-normal.woff2); }
+@font-face { font-family: Mont; font-weight: 600; src: url(/node_modules/@fontsource/montserrat/files/montserrat-latin-600-normal.woff2); }
+@font-face { font-family: Mont; font-weight: 700; src: url(/node_modules/@fontsource/montserrat/files/montserrat-latin-700-normal.woff2); }
+@font-face { font-family: Mont; font-weight: 800; src: url(/node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2); }
+@font-face { font-family: Mont; font-weight: 900; src: url(/node_modules/@fontsource/montserrat/files/montserrat-latin-900-normal.woff2); }
+:root {
+  --navy: #040d22; --navy2: #0a1d44; --gold: #e2b85c; --gold2: #f7e1a0; --ivory: #fbf6ea;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--navy); font-family: Mont, sans-serif; color: #fff; }
+canvas { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+.layer { position: absolute; inset: 0; pointer-events: none; }
+.abs { position: absolute; will-change: transform, opacity, filter; }
+
+/* grade */
+#grade { background:
+  linear-gradient(180deg, rgba(3,10,30,.68) 0%, rgba(3,10,30,.25) 16%, rgba(3,10,30,0) 28%, rgba(3,10,30,0) 62%, rgba(3,10,30,.62) 100%),
+  radial-gradient(120% 75% at 50% 45%, rgba(0,0,0,0) 55%, rgba(2,8,24,.55) 100%); }
+#warm { background: radial-gradient(70% 40% at 80% 8%, rgba(255,205,120,.16), rgba(255,205,120,0) 70%); mix-blend-mode: screen; }
+#leak { inset: 0; opacity: 0; mix-blend-mode: screen;
+  background: radial-gradient(60% 35% at 50% 50%, rgba(255,228,160,.95), rgba(255,190,90,.35) 45%, rgba(255,170,60,0) 75%); }
+#dim { inset: 0; background: rgba(3,9,26,1); opacity: 0; }
+
+/* gold metallic text */
+.gold { background: linear-gradient(100deg, #8a6420 0%, #e9c66f 16%, #fff5d2 27%, #e2b85c 38%, #9a6c22 52%, #f2d384 68%, #fff2c8 76%, #c29038 90%, #8a6420 100%);
+  background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 8px 22px rgba(0,0,0,.55)); }
+.white { background: linear-gradient(180deg, #ffffff 0%, #f6f1e4 55%, #d9cfb8 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,.6)); }
+.kick { font-family: Mont; font-weight: 700; letter-spacing: .32em; font-size: 26px; color: var(--gold2); text-shadow: 0 2px 12px rgba(0,0,0,.6); }
+.serif { font-family: Play; }
+.ch { display: inline-block; white-space: pre; will-change: transform, opacity, filter; }
+
+/* holographic glass panel */
+.glass { border-radius: 30px; background: linear-gradient(160deg, rgba(14,32,72,.72), rgba(5,14,36,.58));
+  border: 2px solid rgba(232,196,120,.55); box-shadow: 0 30px 70px rgba(0,4,16,.55), inset 0 1px 0 rgba(255,240,200,.35), inset 0 0 60px rgba(80,130,220,.10);
+  backdrop-filter: blur(14px) saturate(120%); overflow: hidden; }
+.glass::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,.035) 0 2px, rgba(255,255,255,0) 2px 6px); }
+.glass .sheen { position: absolute; top: -20%; bottom: -20%; width: 32%; left: -40%; transform: skewX(-18deg);
+  background: linear-gradient(90deg, rgba(255,240,200,0), rgba(255,240,200,.20), rgba(255,240,200,0)); }
+.corner { position: absolute; width: 34px; height: 34px; border-color: var(--gold2); border-style: solid; border-width: 0; opacity: .9; }
+.corner.tl { left: 12px; top: 12px; border-left-width: 3px; border-top-width: 3px; border-top-left-radius: 14px; }
+.corner.br { right: 12px; bottom: 12px; border-right-width: 3px; border-bottom-width: 3px; border-bottom-right-radius: 14px; }
+.ico { width: 78px; height: 78px; border-radius: 22px; display: grid; place-items: center; flex: none;
+  background: radial-gradient(circle at 30% 25%, #fff3cf, #e2b85c 45%, #8d6421 100%); box-shadow: 0 0 26px rgba(240,200,110,.45), inset 0 -4px 10px rgba(80,50,10,.45); }
+.ico svg { width: 46px; height: 46px; }
+
+/* ---- cover ---- */
+#cover { inset: 0; background: linear-gradient(180deg, rgba(3,9,26,.82) 0%, rgba(3,9,26,.6) 30%, rgba(3,9,26,0) 50%, rgba(3,9,26,0) 60%, rgba(3,9,26,.55) 75%, rgba(3,9,26,0) 90%); }
+#cover .top { position: absolute; left: 120px; right: 120px; top: 250px; text-align: center; }
+#cover .pill { display: inline-flex; align-items: center; gap: 14px; padding: 14px 30px; border-radius: 999px; font-weight: 800; font-size: 28px; letter-spacing: .22em;
+  color: var(--navy); background: linear-gradient(100deg, #b98a35, #f7e1a0 45%, #d6a548); box-shadow: 0 12px 30px rgba(0,0,0,.45); }
+#cover .h1 { margin-top: 34px; font-family: Play; font-weight: 900; font-size: 128px; line-height: .98; letter-spacing: -.01em; }
+#cover .h2 { margin-top: 14px; font-family: Mont; font-weight: 800; font-size: 50px; letter-spacing: .06em; }
+#cover .num { font-family: Play; font-weight: 900; font-size: 172px; line-height: .9; letter-spacing: -.02em; margin-top: 6px; }
+#cover .sub { font-weight: 700; font-size: 34px; letter-spacing: .3em; margin-top: 6px; color: #fff; text-shadow: 0 3px 14px rgba(0,0,0,.7); }
+#cover .bottom { position: absolute; left: 120px; width: 780px; top: 1250px; display: flex; justify-content: center; }
+#cover .chip { padding: 18px 34px; border-radius: 22px; font-weight: 700; font-size: 32px; letter-spacing: .04em; }
+#cover .chip b { font-family: Play; font-weight: 900; font-size: 44px; letter-spacing: 0; color: var(--gold2); }
+
+/* ---- roles ---- */
+#roles { left: 120px; width: 780px; top: 1150px; padding: 30px 34px 32px; }
+#roles .k { text-align: center; }
+#roles .t { margin-top: 10px; text-align: center; font-family: Play; font-weight: 800; font-size: 60px; line-height: 1.02; }
+#roles .row { margin-top: 22px; display: flex; justify-content: center; gap: 16px; }
+#roles .r { display: flex; align-items: center; gap: 12px; padding: 10px 20px 10px 10px; border-radius: 999px; font-weight: 700; font-size: 27px; letter-spacing: .04em;
+  background: rgba(255,240,205,.08); border: 1.5px solid rgba(232,196,120,.5); }
+#roles .r .ico { width: 54px; height: 54px; border-radius: 50%; }
+#roles .r .ico svg { width: 32px; height: 32px; }
+
+/* ---- card label ---- */
+#cardlab { left: 120px; width: 780px; top: 1235px; text-align: center; }
+#cardlab .a { font-family: Mont; font-weight: 800; font-size: 60px; letter-spacing: .14em; }
+#cardlab .b { font-family: Play; font-weight: 900; font-style: italic; font-size: 96px; line-height: 1; margin-top: -4px; }
+
+/* ---- limit ---- */
+#limit { left: 120px; width: 780px; top: 1130px; text-align: center; }
+#limit .k { font-size: 28px; }
+#limit .n { font-family: Play; font-weight: 900; font-size: 128px; line-height: 1; margin-top: 8px; letter-spacing: -.01em; white-space: nowrap; }
+#limit .n small { font-size: .5em; vertical-align: .62em; margin-right: 10px; }
+#limit .bar { margin: 18px auto 0; width: 560px; height: 10px; border-radius: 5px; background: rgba(255,255,255,.14); overflow: hidden; }
+#limit .bar i { display: block; height: 100%; width: 0; border-radius: 5px; background: linear-gradient(90deg, #9a6c22, #f7e1a0, #e2b85c); box-shadow: 0 0 18px rgba(247,225,160,.8); }
+#limit .s { margin-top: 16px; font-weight: 700; font-size: 30px; letter-spacing: .26em; text-shadow: 0 3px 14px rgba(0,0,0,.7); }
+#limitTop { left: 120px; width: 840px; top: 250px; text-align: center; }
+#limitTop .k { font-size: 26px; }
+
+/* ---- tak claim ---- */
+#tak { left: 120px; width: 840px; top: 236px; text-align: center; }
+#tak .t { font-family: Mont; font-weight: 900; font-size: 112px; letter-spacing: -.01em; line-height: 1; font-style: italic; }
+#tak .t .q { font-family: Play; font-style: italic; }
+
+/* ---- bonus ---- */
+#bonus { left: 120px; width: 780px; top: 1080px; text-align: center; }
+#bonus .k { font-size: 30px; }
+#bonus .n { font-family: Play; font-weight: 900; font-size: 180px; line-height: .95; letter-spacing: -.02em; white-space: nowrap; }
+#bonus .n small { font-size: .46em; vertical-align: .7em; margin-right: 8px; }
+#bonus .s { font-weight: 800; font-size: 40px; letter-spacing: .34em; margin-top: 4px; text-shadow: 0 3px 14px rgba(0,0,0,.7); }
+
+/* ---- uses panel ---- */
+#uses { left: 120px; width: 700px; top: 250px; padding: 30px 32px 30px; }
+#uses .k { font-size: 23px; letter-spacing: .26em; }
+#uses .t { font-family: Play; font-weight: 800; font-size: 50px; margin-top: 6px; line-height: 1.05; }
+#uses .row { display: flex; align-items: center; gap: 22px; margin-top: 20px; font-weight: 700; font-size: 40px; }
+#uses .row .tick { margin-left: auto; width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(232,196,120,.8); display: grid; place-items: center; }
+#uses .row .tick svg { width: 26px; height: 26px; }
+
+/* ---- bonus recap ---- */
+#recap { left: 120px; width: 780px; top: 1180px; padding: 26px 36px; display: flex; align-items: center; gap: 28px; }
+#recap .ico { width: 120px; height: 120px; border-radius: 50%; }
+#recap .ico svg { width: 66px; height: 66px; }
+#recap .k { font-size: 24px; letter-spacing: .26em; }
+#recap .n { font-family: Play; font-weight: 900; font-size: 92px; line-height: 1; }
+#recap .n small { font-size: .5em; vertical-align: .55em; margin-right: 6px; }
+#recap .s { font-weight: 700; font-size: 26px; letter-spacing: .22em; margin-top: 4px; }
+.disc { font-weight: 500; font-size: 20px; letter-spacing: .04em; color: rgba(255,255,255,.78); text-shadow: 0 2px 8px rgba(0,0,0,.8); }
+#disc1 { left: 120px; width: 780px; top: 1400px; text-align: center; }
+
+/* ---- rawatan / 15 ---- */
+#rawat { left: 120px; width: 840px; top: 236px; text-align: center; }
+#rawat .k { font-size: 26px; }
+#rawat .t { font-family: Play; font-weight: 900; font-size: 104px; line-height: 1.0; margin-top: 8px; }
+#treat { left: 120px; width: 840px; top: 236px; display: flex; align-items: center; justify-content: center; gap: 26px; }
+#treat .n { font-family: Play; font-weight: 900; font-size: 250px; line-height: .8; letter-spacing: -.03em; }
+#treat .r .a { font-weight: 800; font-size: 40px; letter-spacing: .2em; }
+#treat .r .b { font-family: Play; font-weight: 900; font-style: italic; font-size: 76px; line-height: 1.0; }
+#treat .r .c { font-family: Play; font-weight: 900; font-style: italic; font-size: 76px; line-height: 1.0; }
+
+/* ---- benefits ---- */
+#bens { left: 120px; width: 840px; top: 236px; }
+.ben { position: absolute; left: 0; width: 840px; height: 128px; padding: 0 30px 0 24px; display: flex; align-items: center; gap: 26px; border-radius: 26px; }
+.ben .ico { width: 84px; height: 84px; border-radius: 22px; }
+.ben .x { font-weight: 600; font-size: 22px; letter-spacing: .26em; color: var(--gold2); }
+.ben .y { font-family: Play; font-weight: 900; font-size: 54px; line-height: 1.02; }
+.ben .num { margin-left: auto; font-family: Play; font-weight: 900; font-style: italic; font-size: 56px; color: rgba(247,225,160,.28); }
+
+/* ---- CTA ---- */
+#cta { inset: 0; }
+#cta .top { position: absolute; left: 120px; width: 840px; top: 250px; text-align: center; }
+#cta .top .k { font-size: 26px; }
+#cta .top .l { margin-top: 14px; font-family: Play; font-weight: 900; font-size: 64px; line-height: 1.02; }
+#cta .main { position: absolute; left: 120px; width: 780px; top: 870px; text-align: center; }
+#cta .a { font-family: Mont; font-weight: 900; font-size: 100px; line-height: 1; letter-spacing: -.01em; }
+#cta .b { margin-top: 18px; font-family: Play; font-weight: 800; font-size: 50px; line-height: 1.12; }
+#cta .btn { position: absolute; left: 140px; width: 740px; top: 1244px; height: 116px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 22px;
+  font-weight: 900; font-size: 42px; letter-spacing: .12em; color: #0b1a36;
+  background: linear-gradient(100deg, #a77a2c 0%, #f7e1a0 35%, #fff4d6 50%, #e2b85c 70%, #a77a2c 100%); background-size: 220% 100%;
+  box-shadow: 0 18px 50px rgba(0,0,0,.55), 0 0 60px rgba(247,215,140,.35), inset 0 2px 0 rgba(255,255,255,.7); }
+#cta .btn .wa { width: 74px; height: 74px; border-radius: 50%; background: #1fb355; display: grid; place-items: center; box-shadow: inset 0 -3px 6px rgba(0,0,0,.25); }
+#cta .btn .wa svg { width: 46px; height: 46px; }
+#cta .ring { position: absolute; left: 140px; width: 740px; top: 1244px; height: 116px; border-radius: 999px; border: 3px solid rgba(247,225,160,.9); }
+#disc2 { left: 120px; width: 780px; top: 1384px; text-align: center; }
+
+#guides { inset: 0; display: none; }
+#guides .safe { position: absolute; left: 120px; right: 120px; top: 220px; bottom: 480px; border: 3px dashed #00ff88; }
+#guides .btns { position: absolute; right: 0; width: 180px; top: 900px; bottom: 480px; background: rgba(255,0,60,.25); }
+</style>
+<script type="importmap">
+{ "imports": { "three": "/node_modules/three/build/three.module.js", "three/addons/": "/node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<canvas id="base" width="1080" height="1920"></canvas>
+<div class="layer" id="grade"></div>
+<div class="layer" id="warm"></div>
+<canvas id="gl" width="1080" height="1920"></canvas>
+<div class="layer" id="ui">
+
+  <!-- COVER -->
+  <div id="cover" class="abs">
+    <div class="top">
+      <div class="pill" id="cvPill">MEDICAL CARD PREMIUM</div>
+      <div class="h1 white" id="cvH1">Tak Claim?</div>
+      <div class="h2 white" id="cvH2">DAPAT BONUS SEHINGGA</div>
+      <div class="num gold" id="cvNum">RM2,500</div>
+      <div class="sub" id="cvSub">SETAHUN*</div>
+    </div>
+    <div class="bottom"><div class="chip glass" id="cvChip">Limit perlindungan <b>RM3 Juta</b> setahun</div></div>
+  </div>
+
+  <!-- S1 roles -->
+  <div id="roles" class="abs glass"><div class="sheen"></div><i class="corner tl"></i><i class="corner br"></i>
+    <div class="k kick">KHAS UNTUK</div>
+    <div class="t gold">Golongan Profesional</div>
+    <div class="row">
+      <div class="r" id="r1"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 12 0V3"/><path d="M12 15v2a4 4 0 0 0 8 0v-3"/><circle cx="20" cy="12" r="2"/></svg></span>Doktor</div>
+      <div class="r" id="r2"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/><path d="M22 9v6"/></svg></span>Pensyarah</div>
+      <div class="r" id="r3"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18"/><path d="M5 18v-3a7 7 0 0 1 14 0v3"/><path d="M12 8V5"/><path d="M9 9V7M15 9V7"/></svg></span>Jurutera</div>
+    </div>
+  </div>
+  <div id="cardlab" class="abs"><div class="a white" id="clA">MEDICAL CARD</div><div class="b gold" id="clB">Premium</div></div>
+
+  <!-- S2 limit -->
+  <div id="limitTop" class="abs"><div class="k kick" id="ltK">LIMIT PERLINDUNGAN</div></div>
+  <div id="limit" class="abs">
+    <div class="n gold" id="limN"><small>RM</small>3,000,000</div>
+    <div class="bar"><i id="limBar"></i></div>
+    <div class="s" id="limS">SETAHUN</div>
+  </div>
+
+  <!-- S3 -->
+  <div id="tak" class="abs"><div class="t white" id="takT">TAK CLAIM<span class="q">?</span></div></div>
+  <div id="bonus" class="abs">
+    <div class="k kick" id="boK">BONUS SEHINGGA</div>
+    <div class="n gold" id="boN"><small>RM</small>2,500</div>
+    <div class="s" id="boS">SETAHUN*</div>
+  </div>
+
+  <!-- S4 uses -->
+  <div id="uses" class="abs glass"><div class="sheen"></div><i class="corner tl"></i><i class="corner br"></i>
+    <div class="k kick">BONUS BOLEH DIGUNAKAN</div>
+    <div class="t gold">Untuk kesihatan anda</div>
+    <div class="row" id="u1"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2l4 4M20 4l-9.5 9.5M14 6l4 4"/><path d="M15.5 7.5l-9 9H4v-2.5l9-9"/><path d="M4 20l2.5-2.5M7 11l2 2M10 8l2 2"/></svg></span>Vaksin<span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#f7e1a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span></div>
+    <div class="row" id="u2"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 8.6a5 5 0 0 0-8.8-3.2A5 5 0 0 0 3.2 8.6c0 5.4 8.8 11 8.8 11s3.3-2.1 5.8-5"/><path d="M3 12h4l2-3 3 6 2-3h7"/></svg></span>Health Screening<span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#f7e1a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span></div>
+    <div class="row" id="u3"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>Dan lain-lain<span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#f7e1a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span></div>
+  </div>
+
+  <div id="recap" class="abs glass"><div class="sheen"></div><i class="corner tl"></i><i class="corner br"></i>
+    <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="7" rx="7" ry="3"/><path d="M5 7v5c0 1.7 3.1 3 7 3s7-1.3 7-3V7"/><path d="M5 12v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></svg></span>
+    <div><div class="k kick">BONUS TANPA CLAIM</div><div class="n gold"><small>RM</small>2,500</div><div class="s">SETIAP TAHUN*</div></div>
+  </div>
+  <div id="disc1" class="abs disc">*Tertakluk kepada terma dan syarat pelan.</div>
+
+  <!-- S7 -->
+  <div id="rawat" class="abs"><div class="k kick" id="raK">MEDICAL CARD PREMIUM</div><div class="t white" id="raT">Rawatan <span class="gold" style="font-style:italic">Selesa</span></div></div>
+  <div id="treat" class="abs"><div class="n gold" id="trN">15</div><div class="r"><div class="a white">JENIS</div><div class="b white">Advanced</div><div class="c gold">Treatment</div></div></div>
+
+  <!-- S8 -->
+  <div id="bens" class="abs">
+    <div class="ben glass" id="b1"><div class="sheen"></div><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8C10 4 6.5 4 6.5 6.5S12 8 12 8zM12 8c2-4 5.5-4 5.5-1.5S12 8 12 8z"/></svg></span><div><div class="x">MANFAAT</div><div class="y white">Hibah</div></div><div class="num">01</div></div>
+    <div class="ben glass" id="b2"><div class="sheen"></div><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.5 9.5-8 11-4.5-1.5-8-6-8-11V5z"/><circle cx="12" cy="9" r="2"/><path d="M8.5 15.5c.8-2 2-3 3.5-3s2.7 1 3.5 3"/></svg></span><div><div class="x">PERLINDUNGAN</div><div class="y white">Hilang Upaya Kekal</div></div><div class="num">02</div></div>
+    <div class="ben glass" id="b3"><div class="sheen"></div><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1408" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18V6M2 14h20v4M22 14v-2a3 3 0 0 0-3-3h-8v5"/><circle cx="6.5" cy="11" r="2"/><path d="M15 3l1 2 2 .3-1.5 1.4.4 2-1.9-1-1.9 1 .4-2L12 5.3l2-.3z"/></svg></span><div><div class="x">KESELESAAN</div><div class="y white">Bilik Premium</div></div><div class="num">03</div></div>
+  </div>
+
+  <!-- CTA -->
+  <div id="cta" class="abs">
+    <div class="top"><div class="k kick" id="ctK">MEDICAL CARD PREMIUM</div><div class="l gold" id="ctL">Limit RM3 Juta Setahun</div></div>
+    <div class="main"><div class="a white" id="ctA">WhatsApp<br><span class="gold">Sekarang</span></div><div class="b" id="ctB"><span class="white">untuk aktifkan </span><span class="gold" style="font-style:italic">medical card</span><span class="white"> anda hari ini</span></div></div>
+    <div class="ring" id="ctRing"></div>
+    <div class="btn" id="ctBtn"><span class="wa"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 1.8a8.2 8.2 0 1 1-4.2 15.3l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 0 1 12 3.8zM8.6 7.2c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.2 1.3 3.4c.2.2 2.3 3.6 5.7 4.9 2.8 1.1 3.4.9 4 .8.6-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6l-.6-.4-2-1c-.3-.1-.5-.1-.7.1l-1 1.2c-.2.2-.4.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.3c-.2-.6-.5-.5-.7-.5z"/></svg></span>WHATSAPP SEKARANG</div>
+  </div>
+  <div id="disc2" class="abs disc">*Manfaat tertakluk kepada terma dan syarat pelan.</div>
+
+  <div id="leak" class="abs"></div>
+  <div id="dim" class="abs"></div>
+</div>
+<div id="guides" class="layer"><div class="safe"></div><div class="btns"></div></div>
+<script type="module" src="/mc/scene.js"></script>
+</body>
+</html>
