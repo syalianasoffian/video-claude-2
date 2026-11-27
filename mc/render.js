@@ -34,7 +34,7 @@ const server = http.createServer((req, res) => {
     const from = +(opt('--from') || 0), to = Math.min(+(opt('--to') || dur), dur);
     const out = opt('--out') || path.join(ROOT, 'build/mc/video_noaudio.mp4');
     const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'mjpeg', '-i', '-',
-      '-c:v', 'libx264', '-preset', 'medium', '-crf', '16', '-pix_fmt', 'yuv420p', out], { stdio: ['pipe', 'inherit', 'inherit'] });
+      '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', '-pix_fmt', 'yuv420p', out], { stdio: ['pipe', 'inherit', 'inherit'] });
     const f0 = Math.round(from * fps), f1 = Math.round(to * fps), t0 = Date.now();
     for (let f = f0; f < f1; f++) {
       await page.evaluate(t => window.renderAt(t), f / fps);
