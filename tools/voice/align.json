@@ -1,0 +1,694 @@
+{
+ "sig": [
+  "hook1_A00.12",
+  "hook2_A02.299",
+  "hook3_A08.307",
+  "s1a_A010.709",
+  "s1b_A012.109",
+  "s2a_A016.985",
+  "s2b_A019.223",
+  "s3a_A024.089",
+  "s3b_A026.401",
+  "s3c_A029.029",
+  "sol1_A033.09",
+  "sol2_A038.538",
+  "cta_A042.631"
+ ],
+ "lines": [
+  {
+   "id": "hook1",
+   "text": "Ingat senang ke jadi business owner?",
+   "take": "hook1_A0",
+   "start": 0.12,
+   "end": 2.079,
+   "asr": "Ingat senang kejadi bisnes owner.",
+   "words": [
+    {
+     "w": "Ingat",
+     "s": 0.07,
+     "e": 0.39
+    },
+    {
+     "w": "senang",
+     "s": 0.39,
+     "e": 0.81
+    },
+    {
+     "w": "ke",
+     "s": 0.81,
+     "e": 0.944
+    },
+    {
+     "w": "jadi",
+     "s": 0.944,
+     "e": 1.168
+    },
+    {
+     "w": "business",
+     "s": 1.168,
+     "e": 1.57
+    },
+    {
+     "w": "owner?",
+     "s": 1.57,
+     "e": 2.09
+    }
+   ]
+  },
+  {
+   "id": "hook2",
+   "text": "Ni tiga kerisauan kebanyakan business owner yang saya jumpa. Sampai nak tidur malam pun tak lena.",
+   "take": "hook2_A0",
+   "start": 2.299,
+   "end": 8.007,
+   "asr": "Ni tiga kerisauan kebanyakan bisnes owner yang saya jumpa. Sampai nak tidur malam pun tak lenar.",
+   "words": [
+    {
+     "w": "Ni",
+     "s": 2.249,
+     "e": 2.489
+    },
+    {
+     "w": "tiga",
+     "s": 2.489,
+     "e": 2.769
+    },
+    {
+     "w": "kerisauan",
+     "s": 2.769,
+     "e": 3.409
+    },
+    {
+     "w": "kebanyakan",
+     "s": 3.409,
+     "e": 3.969
+    },
+    {
+     "w": "business",
+     "s": 3.969,
+     "e": 4.369
+    },
+    {
+     "w": "owner",
+     "s": 4.369,
+     "e": 4.669
+    },
+    {
+     "w": "yang",
+     "s": 4.669,
+     "e": 4.889
+    },
+    {
+     "w": "saya",
+     "s": 4.889,
+     "e": 5.149
+    },
+    {
+     "w": "jumpa.",
+     "s": 5.149,
+     "e": 5.789
+    },
+    {
+     "w": "Sampai",
+     "s": 5.789,
+     "e": 6.289
+    },
+    {
+     "w": "nak",
+     "s": 6.289,
+     "e": 6.429
+    },
+    {
+     "w": "tidur",
+     "s": 6.429,
+     "e": 6.749
+    },
+    {
+     "w": "malam",
+     "s": 6.749,
+     "e": 7.109
+    },
+    {
+     "w": "pun",
+     "s": 7.109,
+     "e": 7.289
+    },
+    {
+     "w": "tak",
+     "s": 7.289,
+     "e": 7.489
+    },
+    {
+     "w": "lena.",
+     "s": 7.489,
+     "e": 8.029
+    }
+   ]
+  },
+  {
+   "id": "hook3",
+   "text": "Dan yang ketiga tu, paling scary.",
+   "take": "hook3_A0",
+   "start": 8.307,
+   "end": 10.159,
+   "asr": "Dan yang ketiga tu paling scary.",
+   "words": [
+    {
+     "w": "Dan",
+     "s": 8.257,
+     "e": 8.477
+    },
+    {
+     "w": "yang",
+     "s": 8.477,
+     "e": 8.617
+    },
+    {
+     "w": "ketiga",
+     "s": 8.617,
+     "e": 8.997
+    },
+    {
+     "w": "tu,",
+     "s": 8.997,
+     "e": 9.157
+    },
+    {
+     "w": "paling",
+     "s": 9.157,
+     "e": 9.477
+    },
+    {
+     "w": "scary.",
+     "s": 9.477,
+     "e": 10.157
+    }
+   ]
+  },
+  {
+   "id": "s1a",
+   "text": "Pertama, tanggungan staf.",
+   "take": "s1a_A0",
+   "start": 10.709,
+   "end": 11.889,
+   "asr": "Pertama, tanggungan staf.",
+   "words": [
+    {
+     "w": "Pertama,",
+     "s": 10.659,
+     "e": 11.179
+    },
+    {
+     "w": "tanggungan",
+     "s": 11.179,
+     "e": 11.499
+    },
+    {
+     "w": "staf.",
+     "s": 11.499,
+     "e": 11.919
+    }
+   ]
+  },
+  {
+   "id": "s1b",
+   "text": "Sepuluh hingga dua puluh orang staf, yang hidupnya bergantung atas mereka.",
+   "take": "s1b_A0",
+   "start": 12.109,
+   "end": 16.435,
+   "asr": "10 hingga 20 orang staf yang hidupnya bergantung atas mereka.",
+   "words": [
+    {
+     "w": "Sepuluh",
+     "s": 12.059,
+     "e": 12.459
+    },
+    {
+     "w": "hingga",
+     "s": 12.459,
+     "e": 12.839
+    },
+    {
+     "w": "dua",
+     "s": 12.839,
+     "e": 12.967
+    },
+    {
+     "w": "puluh",
+     "s": 12.967,
+     "e": 13.159
+    },
+    {
+     "w": "orang",
+     "s": 13.159,
+     "e": 13.499
+    },
+    {
+     "w": "staf,",
+     "s": 13.499,
+     "e": 13.919
+    },
+    {
+     "w": "yang",
+     "s": 13.919,
+     "e": 14.399
+    },
+    {
+     "w": "hidupnya",
+     "s": 14.399,
+     "e": 14.819
+    },
+    {
+     "w": "bergantung",
+     "s": 14.819,
+     "e": 15.399
+    },
+    {
+     "w": "atas",
+     "s": 15.399,
+     "e": 15.759
+    },
+    {
+     "w": "mereka.",
+     "s": 15.759,
+     "e": 16.399
+    }
+   ]
+  },
+  {
+   "id": "s2a",
+   "text": "Kedua, bills dan tanggungan syarikat.",
+   "take": "s2a_A0",
+   "start": 16.985,
+   "end": 19.003,
+   "asr": "Kedua, bills dan tanggungan syarikat.",
+   "words": [
+    {
+     "w": "Kedua,",
+     "s": 16.935,
+     "e": 17.515
+    },
+    {
+     "w": "bills",
+     "s": 17.515,
+     "e": 17.695
+    },
+    {
+     "w": "dan",
+     "s": 17.695,
+     "e": 17.915
+    },
+    {
+     "w": "tanggungan",
+     "s": 17.915,
+     "e": 18.395
+    },
+    {
+     "w": "syarikat.",
+     "s": 18.395,
+     "e": 19.035
+    }
+   ]
+  },
+  {
+   "id": "s2b",
+   "text": "Sewa, utiliti, bayaran kepada supplier. Setiap bulan, tak pernah berhenti.",
+   "take": "s2b_A0",
+   "start": 19.223,
+   "end": 23.539,
+   "asr": "Sewa utiliti bayaran kepada supplier setiap bulan tak pernah berhenti.",
+   "words": [
+    {
+     "w": "Sewa,",
+     "s": 19.173,
+     "e": 19.713
+    },
+    {
+     "w": "utiliti,",
+     "s": 19.713,
+     "e": 20.233
+    },
+    {
+     "w": "bayaran",
+     "s": 20.233,
+     "e": 20.713
+    },
+    {
+     "w": "kepada",
+     "s": 20.713,
+     "e": 20.973
+    },
+    {
+     "w": "supplier.",
+     "s": 20.973,
+     "e": 21.493
+    },
+    {
+     "w": "Setiap",
+     "s": 21.493,
+     "e": 22.153
+    },
+    {
+     "w": "bulan,",
+     "s": 22.153,
+     "e": 22.393
+    },
+    {
+     "w": "tak",
+     "s": 22.393,
+     "e": 22.533
+    },
+    {
+     "w": "pernah",
+     "s": 22.533,
+     "e": 22.773
+    },
+    {
+     "w": "berhenti.",
+     "s": 22.773,
+     "e": 23.573
+    }
+   ]
+  },
+  {
+   "id": "s3a",
+   "text": "Dan yang ketiga, loan dan pembiayaan.",
+   "take": "s3a_A0",
+   "start": 24.089,
+   "end": 26.181,
+   "asr": "Dan yang ketiga, loan dan pembiayaan.",
+   "words": [
+    {
+     "w": "Dan",
+     "s": 24.039,
+     "e": 24.259
+    },
+    {
+     "w": "yang",
+     "s": 24.259,
+     "e": 24.439
+    },
+    {
+     "w": "ketiga,",
+     "s": 24.439,
+     "e": 25.019
+    },
+    {
+     "w": "loan",
+     "s": 25.019,
+     "e": 25.159
+    },
+    {
+     "w": "dan",
+     "s": 25.159,
+     "e": 25.339
+    },
+    {
+     "w": "pembiayaan.",
+     "s": 25.339,
+     "e": 26.179
+    }
+   ]
+  },
+  {
+   "id": "s3b",
+   "text": "Beli mesin, hartanah, personal financing.",
+   "take": "s3b_A0",
+   "start": 26.401,
+   "end": 28.749,
+   "asr": "Beli mesin hartanah personal financing.",
+   "words": [
+    {
+     "w": "Beli",
+     "s": 26.351,
+     "e": 26.671
+    },
+    {
+     "w": "mesin,",
+     "s": 26.671,
+     "e": 26.971
+    },
+    {
+     "w": "hartanah,",
+     "s": 26.971,
+     "e": 27.511
+    },
+    {
+     "w": "personal",
+     "s": 27.511,
+     "e": 27.851
+    },
+    {
+     "w": "financing.",
+     "s": 27.851,
+     "e": 28.771
+    }
+   ]
+  },
+  {
+   "id": "s3c",
+   "text": "Dan director syarikat, adalah penjamin untuk loan tersebut.",
+   "take": "s3c_A0",
+   "start": 29.029,
+   "end": 32.39,
+   "asr": "dan director syarikat adalah penjamin untuk loan tersebut.",
+   "words": [
+    {
+     "w": "Dan",
+     "s": 28.979,
+     "e": 29.219
+    },
+    {
+     "w": "director",
+     "s": 29.219,
+     "e": 29.579
+    },
+    {
+     "w": "syarikat,",
+     "s": 29.579,
+     "e": 30.139
+    },
+    {
+     "w": "adalah",
+     "s": 30.139,
+     "e": 30.539
+    },
+    {
+     "w": "penjamin",
+     "s": 30.539,
+     "e": 31.119
+    },
+    {
+     "w": "untuk",
+     "s": 31.119,
+     "e": 31.459
+    },
+    {
+     "w": "loan",
+     "s": 31.459,
+     "e": 31.759
+    },
+    {
+     "w": "tersebut.",
+     "s": 31.759,
+     "e": 32.419
+    }
+   ]
+  },
+  {
+   "id": "sol1",
+   "text": "Sebab tu, ramai business owner ambil perlindungan KeyMan policy, untuk cover diri mereka.",
+   "take": "sol1_A0",
+   "start": 33.09,
+   "end": 38.238,
+   "asr": "Sebab tu, ramai bisnes owner ambil perlindungan keman polisi untuk cover diri mereka.",
+   "words": [
+    {
+     "w": "Sebab",
+     "s": 33.04,
+     "e": 33.46
+    },
+    {
+     "w": "tu,",
+     "s": 33.46,
+     "e": 33.84
+    },
+    {
+     "w": "ramai",
+     "s": 33.84,
+     "e": 34.14
+    },
+    {
+     "w": "business",
+     "s": 34.14,
+     "e": 34.58
+    },
+    {
+     "w": "owner",
+     "s": 34.58,
+     "e": 34.86
+    },
+    {
+     "w": "ambil",
+     "s": 34.86,
+     "e": 35.12
+    },
+    {
+     "w": "perlindungan",
+     "s": 35.12,
+     "e": 35.64
+    },
+    {
+     "w": "KeyMan",
+     "s": 35.64,
+     "e": 35.96
+    },
+    {
+     "w": "policy,",
+     "s": 35.96,
+     "e": 36.46
+    },
+    {
+     "w": "untuk",
+     "s": 36.46,
+     "e": 36.9
+    },
+    {
+     "w": "cover",
+     "s": 36.9,
+     "e": 37.28
+    },
+    {
+     "w": "diri",
+     "s": 37.28,
+     "e": 37.64
+    },
+    {
+     "w": "mereka.",
+     "s": 37.64,
+     "e": 38.26
+    }
+   ]
+  },
+  {
+   "id": "sol2",
+   "text": "Untuk cover tiga kerisauan besar ni. Untuk ada peace of mind.",
+   "take": "sol2_A0",
+   "start": 38.538,
+   "end": 42.081,
+   "asr": "untuk cover tiga kerisauan besar ni untuk ada peace of mind",
+   "words": [
+    {
+     "w": "Untuk",
+     "s": 38.488,
+     "e": 38.788
+    },
+    {
+     "w": "cover",
+     "s": 38.788,
+     "e": 39.048
+    },
+    {
+     "w": "tiga",
+     "s": 39.048,
+     "e": 39.288
+    },
+    {
+     "w": "kerisauan",
+     "s": 39.288,
+     "e": 39.768
+    },
+    {
+     "w": "besar",
+     "s": 39.768,
+     "e": 40.068
+    },
+    {
+     "w": "ni.",
+     "s": 40.068,
+     "e": 40.288
+    },
+    {
+     "w": "Untuk",
+     "s": 40.588,
+     "e": 40.888
+    },
+    {
+     "w": "ada",
+     "s": 40.888,
+     "e": 41.068
+    },
+    {
+     "w": "peace",
+     "s": 41.068,
+     "e": 41.348
+    },
+    {
+     "w": "of",
+     "s": 41.348,
+     "e": 41.528
+    },
+    {
+     "w": "mind.",
+     "s": 41.528,
+     "e": 41.928
+    }
+   ]
+  },
+  {
+   "id": "cta",
+   "text": "Business owner nak tahu lebih lanjut, WhatsApp saya sekarang.",
+   "take": "cta_A0",
+   "start": 42.631,
+   "end": 46.093,
+   "asr": "Business Owner nak tahu lebih lanjut WhatsApp saya sekarang.",
+   "words": [
+    {
+     "w": "Business",
+     "s": 42.581,
+     "e": 42.961
+    },
+    {
+     "w": "owner",
+     "s": 42.961,
+     "e": 43.281
+    },
+    {
+     "w": "nak",
+     "s": 43.281,
+     "e": 43.461
+    },
+    {
+     "w": "tahu",
+     "s": 43.461,
+     "e": 43.701
+    },
+    {
+     "w": "lebih",
+     "s": 43.701,
+     "e": 44.021
+    },
+    {
+     "w": "lanjut,",
+     "s": 44.021,
+     "e": 44.561
+    },
+    {
+     "w": "WhatsApp",
+     "s": 44.561,
+     "e": 45.021
+    },
+    {
+     "w": "saya",
+     "s": 45.021,
+     "e": 45.461
+    },
+    {
+     "w": "sekarang.",
+     "s": 45.461,
+     "e": 46.121
+    }
+   ]
+  }
+ ]
+}

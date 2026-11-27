@@ -1,0 +1,96 @@
+{
+ "duration": 46.693,
+ "lines": [
+  {
+   "id": "hook1",
+   "text": "Ingat senang ke jadi business owner?",
+   "take": "hook1_A0",
+   "start": 0.12,
+   "end": 2.079
+  },
+  {
+   "id": "hook2",
+   "text": "Ni tiga kerisauan kebanyakan business owner yang saya jumpa. Sampai nak tidur malam pun tak lena.",
+   "take": "hook2_A0",
+   "start": 2.299,
+   "end": 8.007
+  },
+  {
+   "id": "hook3",
+   "text": "Dan yang ketiga tu, paling scary.",
+   "take": "hook3_A0",
+   "start": 8.307,
+   "end": 10.159
+  },
+  {
+   "id": "s1a",
+   "text": "Pertama, tanggungan staf.",
+   "take": "s1a_A0",
+   "start": 11.209,
+   "end": 12.389
+  },
+  {
+   "id": "s1b",
+   "text": "Sepuluh hingga dua puluh orang staf, yang hidupnya bergantung atas mereka.",
+   "take": "s1b_A0",
+   "start": 12.609,
+   "end": 16.935
+  },
+  {
+   "id": "s2a",
+   "text": "Kedua, bills dan tanggungan syarikat.",
+   "take": "s2a_A0",
+   "start": 17.485,
+   "end": 19.503
+  },
+  {
+   "id": "s2b",
+   "text": "Sewa, utiliti, bayaran kepada supplier. Setiap bulan, tak pernah berhenti.",
+   "take": "s2b_A0",
+   "start": 19.723,
+   "end": 24.039
+  },
+  {
+   "id": "s3a",
+   "text": "Dan yang ketiga, loan dan pembiayaan.",
+   "take": "s3a_A0",
+   "start": 24.589,
+   "end": 26.681
+  },
+  {
+   "id": "s3b",
+   "text": "Beli mesin, hartanah, personal financing.",
+   "take": "s3b_A0",
+   "start": 26.901,
+   "end": 29.249
+  },
+  {
+   "id": "s3c",
+   "text": "Dan director syarikat, adalah penjamin untuk loan tersebut.",
+   "take": "s3c_A0",
+   "start": 29.529,
+   "end": 32.89
+  },
+  {
+   "id": "sol1",
+   "text": "Sebab tu, ramai business owner ambil perlindungan KeyMan policy, untuk cover diri mereka.",
+   "take": "sol1_A0",
+   "start": 33.59,
+   "end": 38.738
+  },
+  {
+   "id": "sol2",
+   "text": "Untuk cover tiga kerisauan besar ni. Untuk ada peace of mind.",
+   "take": "sol2_A0",
+   "start": 39.038,
+   "end": 42.581
+  },
+  {
+   "id": "cta",
+   "text": "Business owner nak tahu lebih lanjut, WhatsApp saya sekarang.",
+   "take": "cta_A0",
+   "start": 43.131,
+   "end": 46.593
+  }
+ ]
+}

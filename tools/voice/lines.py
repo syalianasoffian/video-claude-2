@@ -1,0 +1,15 @@
+LINES = [
+    ("hook1", "Ingat senang ke jadi business owner?"),
+    ("hook2", "Ni tiga kerisauan kebanyakan business owner yang saya jumpa. Sampai nak tidur malam pun tak lena."),
+    ("hook3", "Dan yang ketiga tu, paling scary."),
+    ("s1a", "Pertama, tanggungan staf."),
+    ("s1b", "Sepuluh hingga dua puluh orang staf, yang hidupnya bergantung atas mereka."),
+    ("s2a", "Kedua, bills dan tanggungan syarikat."),
+    ("s2b", "Sewa, utiliti, bayaran kepada supplier. Setiap bulan, tak pernah berhenti."),
+    ("s3a", "Dan yang ketiga, loan dan pembiayaan."),
+    ("s3b", "Beli mesin, hartanah, personal financing."),
+    ("s3c", "Dan director syarikat, adalah penjamin untuk loan tersebut."),
+    ("sol1", "Sebab tu, ramai business owner ambil perlindungan KeyMan policy, untuk cover diri mereka."),
+    ("sol2", "Untuk cover tiga kerisauan besar ni. Untuk ada peace of mind."),
+    ("cta", "Business owner nak tahu lebih lanjut, WhatsApp saya sekarang."),
+]

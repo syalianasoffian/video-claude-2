@@ -1,0 +1,89 @@
+<template>
+  <style>
+    #root { position: absolute; inset: 0; overflow: hidden; background: #110f0e; }
+    #s3-bg { position: absolute; inset: 0; background: radial-gradient(70% 45% at 50% 42%, #2a1412 0%, #110f0e 70%); }
+    #s3-alarm { position: absolute; left: -540px; top: -300px; width: 2160px; height: 2520px; background: conic-gradient(from 0deg at 50% 50%, rgba(224,36,27,0) 0deg, rgba(224,36,27,.22) 30deg, rgba(224,36,27,0) 60deg, rgba(224,36,27,0) 180deg, rgba(224,36,27,.22) 210deg, rgba(224,36,27,0) 240deg); opacity: 0; }
+    #s3-grain { position: absolute; inset: 0; color: rgba(255,255,255,.04); }
+    #s3-cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+    #s3-num { position: absolute; left: 124px; top: 318px; font-family: var(--f-display); font-size: 250px; line-height: .9; color: transparent; -webkit-text-stroke: 5px var(--red); }
+    #s3-title { position: absolute; left: 390px; top: 318px; }
+    #s3-title .t1 { font-family: var(--f-body); font-weight: 800; font-size: 30px; letter-spacing: 6px; color: var(--yellow); }
+    #s3-title .t2 { font-family: var(--f-display); font-size: 104px; line-height: 1; color: #fff; }
+    #s3-title .t3 { position: relative; isolation: isolate; display: inline-block; font-family: var(--f-display); font-size: 92px; line-height: 1.02; color: #fff; padding: 0 14px; }
+    #s3-title .t3 i { position: absolute; inset: 6px 0 4px; background: var(--red); z-index: -1; transform-origin: 0 50%; }
+    #s3-bank { position: absolute; left: 130px; top: 650px; width: 300px; height: 270px; overflow: visible; }
+    #s3-bank path, #s3-bank rect, #s3-bank line { fill: none; stroke: #fff; stroke-width: 9; stroke-linejoin: round; stroke-linecap: round; }
+    #s3-bank text { fill: #fff; font-family: var(--f-heavy); font-size: 34px; }
+    #s3-chips { position: absolute; left: 456px; top: 660px; width: 330px; }
+    .chip { display: flex; align-items: center; gap: 14px; background: #fff; color: var(--ink); border-radius: 14px; padding: 14px 18px; margin-bottom: 18px; font-family: var(--f-heavy); font-size: 36px; line-height: 1.05; opacity: 0; box-shadow: 6px 6px 0 var(--red); }
+    .chip svg { flex: 0 0 46px; width: 46px; height: 46px; }
+    #s3-doc { position: absolute; left: 140px; top: 610px; width: 620px; height: 470px; background: #fbf8f1; border-radius: 6px; padding: 34px 38px; color: var(--ink); opacity: 0; box-shadow: 0 30px 60px rgba(0,0,0,.5); }
+    #s3-doc .h { font-family: var(--f-heavy); font-size: 30px; white-space: nowrap; letter-spacing: 1px; }
+    #s3-doc .ln { height: 12px; background: #d9d2c4; border-radius: 6px; margin: 14px 0; }
+    #s3-doc .lab { font-family: var(--f-body); font-weight: 700; font-size: 28px; line-height: 1.2; color: #6d655a; margin-top: 24px; }
+    #s3-doc .val { font-family: var(--f-heavy); font-size: 33px; white-space: nowrap; line-height: 1.1; }
+    #s3-doc .val.dir { color: var(--red); }
+    #s3-sig { opacity: 0; position: absolute; left: 330px; top: 330px; width: 240px; height: 110px; overflow: visible; }
+    #s3-stamp { position: absolute; left: 170px; top: 760px; padding: 10px 30px; border: 10px solid var(--red); border-radius: 14px; color: var(--red); font-family: var(--f-display); font-size: 130px; line-height: 1; letter-spacing: 4px; transform: rotate(-10deg); opacity: 0; background: rgba(251,248,241,.6); }
+    #s3-vig { position: absolute; inset: 0; background: radial-gradient(60% 50% at 50% 50%, rgba(224,36,27,0) 40%, rgba(224,36,27,.55)); opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="loan" data-width="1080" data-height="1920">
+    <div id="s3-bg"></div>
+    <div id="s3-alarm"></div>
+    <div id="s3-grain" class="halftone" style="inset:0"></div>
+    <div id="s3-cam">
+      <div id="s3-num">03</div>
+      <div id="s3-title"><div class="t1">KERISAUAN KETIGA</div><div class="t2">LOAN &amp;</div><div class="t3"><i></i>PEMBIAYAAN</div></div>
+      <svg id="s3-bank" viewBox="0 0 300 270">
+        <path pathLength="1" d="M20 92 L150 18 L280 92 Z" />
+        <rect pathLength="1" x="30" y="100" width="240" height="24" />
+        <line pathLength="1" x1="62" y1="132" x2="62" y2="218" /><line pathLength="1" x1="118" y1="132" x2="118" y2="218" />
+        <line pathLength="1" x1="182" y1="132" x2="182" y2="218" /><line pathLength="1" x1="238" y1="132" x2="238" y2="218" />
+        <rect pathLength="1" x="20" y="226" width="260" height="26" />
+        <text x="110" y="78" id="s3-loantxt" opacity="0">RM</text>
+      </svg>
+      <div id="s3-chips">
+        <div class="chip" id="s3-c1"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="8" fill="none" stroke="#14110e" stroke-width="5"/><path d="M24 4v8M24 36v8M4 24h8M36 24h8M10 10l6 6M32 32l6 6M38 10l-6 6M16 32l-6 6" stroke="#14110e" stroke-width="5" stroke-linecap="round"/></svg>BELI MESIN</div>
+        <div class="chip" id="s3-c2"><svg viewBox="0 0 48 48"><path d="M5 24 L24 7 L43 24 M10 20 V42 H38 V20" fill="none" stroke="#14110e" stroke-width="5" stroke-linejoin="round"/><rect x="20" y="28" width="9" height="14" fill="#e0241b"/></svg>HARTANAH</div>
+        <div class="chip" id="s3-c3"><svg viewBox="0 0 48 48"><rect x="3" y="9" width="42" height="30" rx="5" fill="none" stroke="#14110e" stroke-width="5"/><circle cx="16" cy="22" r="5" fill="#e0241b"/><path d="M26 19h12M26 27h9" stroke="#14110e" stroke-width="4" stroke-linecap="round"/></svg>PERSONAL FINANCING</div>
+      </div>
+      <div id="s3-doc" data-layout-allow-overlap>
+        <div class="h">SURAT JAMINAN PINJAMAN</div>
+        <div class="ln" style="width:92%"></div><div class="ln" style="width:78%"></div>
+        <div class="lab">Peminjam</div><div class="val">SYARIKAT ANDA SDN BHD</div>
+        <div class="lab">Penjamin</div><div class="val dir">DIRECTOR SYARIKAT</div>
+        <svg id="s3-sig" viewBox="0 0 240 110"><path id="s3-sigp" pathLength="1" stroke-dasharray="1 1.2" stroke-dashoffset="1.1" d="M8 78 C 30 20, 48 20, 44 70 C 42 96, 70 40, 90 46 C 110 52, 96 88, 122 70 C 146 52, 150 30, 170 58 C 182 76, 200 60, 232 40" fill="none" stroke="#1b3563" stroke-width="6" stroke-linecap="round"/></svg>
+      </div>
+      <div id="s3-stamp" data-layout-allow-overlap>PENJAMIN</div>
+    </div>
+    <div id="s3-vig"></div>
+  </div>
+  <script>
+    (() => {
+      const C = (window.CUES && window.CUES.loan) || { k: {}, dur: 9 };
+      const k = (n, d) => (C.k[n] !== undefined ? C.k[n] : d);
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#s3-alarm", { opacity: 0, rotation: 0 }, { opacity: 1, rotation: 200, duration: C.dur, ease: "none" }, 0);
+      tl.fromTo("#s3-num", { opacity: 0, scale: 1.5, filter: "blur(12px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, 0.05);
+      tl.fromTo("#s3-title .t1", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.15);
+      tl.fromTo("#s3-title .t2", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.32, ease: "power4.out" }, k("loan", 0.7) - 0.05);
+      tl.fromTo("#s3-title .t3 i", { scaleX: 0 }, { scaleX: 1, duration: 0.25, ease: "power3.out" }, k("pembiayaan", 1.2) - 0.1);
+      tl.fromTo("#s3-title .t3", { opacity: 0 }, { opacity: 1, duration: 0.05 }, k("pembiayaan", 1.2) - 0.1);
+      tl.fromTo("#s3-bank [pathLength]", { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.out", stagger: 0.05 }, k("pembiayaan", 1.2));
+      tl.to("#s3-loantxt", { opacity: 1, duration: 0.2 }, k("pembiayaan", 1.2) + 0.5);
+      ["mesin", "hartanah", "personal"].forEach((w, i) => {
+        tl.fromTo("#s3-c" + (i + 1), { opacity: 0, x: 60, rotation: 4 }, { opacity: 1, x: 0, rotation: 0, duration: 0.35, ease: "back.out(1.7)" }, k(w, 2.2 + i * 0.6) - 0.05);
+      });
+      const td = k("director", 4.6), tp = k("penjamin", td + 1.0);
+      tl.to(["#s3-bank", "#s3-chips"], { opacity: 0.15, filter: "blur(6px)", duration: 0.3 }, td - 0.15);
+      tl.fromTo("#s3-doc", { opacity: 0, y: 220, rotation: -6 }, { opacity: 1, y: 0, rotation: -2, duration: 0.5, ease: "expo.out" }, td - 0.15);
+      tl.set("#s3-sig", { opacity: 1 }, td + 0.35); tl.to("#s3-sigp", { strokeDashoffset: 0, duration: 0.6, ease: "power1.inOut" }, td + 0.35);
+      tl.fromTo("#s3-stamp", { opacity: 0, scale: 2.6, rotation: -2 }, { opacity: 1, scale: 1, rotation: -10, duration: 0.15, ease: "power4.in" }, tp - 0.1);
+      tl.fromTo("#s3-cam", { x: 0, y: 0, scale: 1 }, { x: 0, y: 0, scale: 1, keyframes: [{ x: -16, y: 8, scale: 1.03, duration: 0.04 }, { x: 13, y: -7, duration: 0.05 }, { x: -8, y: 4, duration: 0.05 }, { x: 4, y: -2, duration: 0.06 }, { x: 0, y: 0, scale: 1.02, duration: 0.08 }] }, tp + 0.05);
+      tl.fromTo("#s3-vig", { opacity: 0 }, { opacity: 1, duration: 0.12 }, tp + 0.04);
+      tl.to("#s3-vig", { opacity: 0.35, duration: 0.6 }, tp + 0.2);
+      tl.to("#s3-cam", { scale: 1.07, duration: Math.max(0.6, C.dur - tp - 0.3), ease: "power1.in" }, tp + 0.3);
+      window.__timelines["loan"] = tl;
+    })();
+  </script>
+</template>
