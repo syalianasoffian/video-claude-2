@@ -200,21 +200,21 @@ function holder(obj, x, y, scale, ped = 0) {
   if (ped) { const p = pedestal(ped); p.position.y = -1.45; root.add(p); root.userData.ped = p; }
   root.visible = false; return { root, spin, obj };
 }
-const shield = holder(makeShield(), 300, 870, 1.0, 1.1);
-const card = holder(makeCard(), 780, 880, .82);
-const gift = holder(makeGift(), 800, 900, .78, 1.15);
-const syringe = holder(makeSyringe(), 290, 890, .78);
-const heart = holder(makeHeart(), 790, 870, .78, 1.0);
-const hosp = holder(makeHospital(), 850, 965, .5, 1.6);
-const ctaShield = holder(makeShield(), 540, 790, .62);
-const coverShield = holder(makeShield(), 800, 840, .95, 1.1);
+const shield = holder(makeShield(), 235, 985, .58, 1.1);
+const card = holder(makeCard(), 815, 990, .5);
+const gift = holder(makeGift(), 845, 1005, .5, 1.15);
+const syringe = holder(makeSyringe(), 850, 960, .5);
+const heart = holder(makeHeart(), 850, 960, .5, 1.0);
+const hosp = holder(makeHospital(), 860, 1030, .4, 1.6);
+const ctaShield = holder(makeShield(), 885, 1030, .42);
+const coverShield = holder(makeShield(), 850, 860, .6, 1.1);
 gift.root.userData.ped.position.y = -.05; hosp.root.userData.ped.position.y = -.05;
 heart.root.userData.ped.position.y = -1.45;
 
 // floating coins (caruman + ganjaran burst)
 const coins = []; for (let i = 0; i < 9; i++) { const c = makeCoin(); scene.add(c); c.visible = false;
-  coins.push({ m: c, x: 700 + rnd() * 260, y: 760 + rnd() * 300, ph: rnd() * 6.28, sp: .5 + rnd(), z: rnd() * 2 - 1, s: .55 + rnd() * .5 }); }
-const stack = new THREE.Group(); scene.add(stack); stack.position.copy(px(790, 980));
+  coins.push({ m: c, x: 760 + rnd() * 200, y: 1000 + rnd() * 70, ph: rnd() * 6.28, sp: .5 + rnd(), z: rnd() * 2 - 1, s: .55 + rnd() * .5 }); }
+const stack = new THREE.Group(); scene.add(stack); stack.position.copy(px(870, 1035));
 const stackCoins = []; for (let i = 0; i < 7; i++) { const c = makeCoin(); c.position.y = i * .11; c.rotation.y = i * .7; stack.add(c); stackCoins.push(c); }
 const burst = []; for (let i = 0; i < 14; i++) { const c = makeCoin(); scene.add(c); c.visible = false;
   const a = rnd() * Math.PI * 2; burst.push({ m: c, vx: Math.cos(a) * (1.5 + rnd() * 2), vy: 3 + rnd() * 3.5, vz: rnd() * 2, rx: rnd() * 8, s: .35 + rnd() * .25 }); }
@@ -307,41 +307,40 @@ const gctx = $('grain').getContext('2d'), gimg = gctx.createImageData(540, 960);
 function grain() { const d = gimg.data; for (let i = 0; i < d.length; i += 4) { const v = rnd() * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } gctx.putImageData(gimg, 0, 0); }
 
 // ---------- camera moves on the footage ----------
-// [start, end, origin x, origin y, scale from, scale to]
+// [start, end, scale from, scale to, vertical shift px]  (scaled about top-centre, then shifted up
+// so faces sit above the graphics band: panels start ~1040px, captions 1300-1436px)
 const SHOTS = [
-  [0, COVER, 540, 640, 1.14, 1.17],
-  [COVER, C.juta, 540, 640, 1.0, 1.06],
-  [C.juta, C.caruman, 540, 600, 1.15, 1.19],
-  [C.caruman, C.rm217, 540, 640, 1.06, 1.08],
-  [C.rm217, C.cut1, 540, 620, 1.14, 1.18],
-  [C.cut1, C.ganjaran, 430, 620, 1.04, 1.1],
-  [C.ganjaran, C.cut2, 430, 600, 1.16, 1.2],
-  [C.cut2, C.cut3, 400, 640, 1.06, 1.13],
-  [C.cut3, C.cut4, 420, 640, 1.04, 1.12],
-  [C.cut4, C.n15, 540, 700, 1.02, 1.08],
-  [C.n15, C.berminat, 540, 680, 1.12, 1.15],
-  [C.berminat, DUR, 540, 700, 1.04, 1.1],
+  [0, COVER, 1.12, 1.14, -70],
+  [COVER, C.juta, 1.05, 1.09, -60],
+  [C.juta, C.caruman, 1.14, 1.17, -90],
+  [C.caruman, C.rm217, 1.07, 1.09, -60],
+  [C.rm217, C.cut1, 1.13, 1.16, -90],
+  [C.cut1, C.ganjaran, 1.08, 1.12, -150],
+  [C.ganjaran, C.cut2, 1.1, 1.12, -160],
+  [C.cut2, C.cut3, 1.07, 1.11, -110],
+  [C.cut3, C.cut4, 1.08, 1.12, -140],
+  [C.cut4, C.n15, 1.13, 1.15, -240],
+  [C.n15, C.berminat, 1.15, 1.17, -260],
+  [C.berminat, DUR, 1.13, 1.16, -240],
 ];
 function camAt(t) {
   let i = SHOTS.findIndex(s => t >= s[0] && t < s[1]); if (i < 0) i = SHOTS.length - 1;
-  const [a, b, ox, oy, s0, s1] = SHOTS[i];
-  let s = lerp(s0, s1, ease(P(t, a, b)));
-  // punch-in eased from previous shot's scale
-  if (i > 0) { const pv = SHOTS[i - 1]; const prevEnd = pv[5]; const k = outExpo(P(t, a, a + .45));
-    const hardCut = [C.cut1, C.cut2, C.cut3, C.cut4, COVER].some(c => Math.abs(c - a) < .01);
-    if (!hardCut) s = lerp(prevEnd, s, k); }
-  // whip zoom at hard cuts
-  for (const c of [C.cut1, C.cut2, C.cut3, C.cut4]) { const d = t - c; if (d >= 0 && d < .4) s *= 1 + .09 * Math.pow(1 - d / .4, 3); }
-  if (t >= COVER && t < COVER + .5) s *= 1 + .12 * Math.pow(1 - (t - COVER) / .5, 3);
-  const dx = Math.sin(t * .35) * 10, dy = Math.cos(t * .27) * 6, rot = Math.sin(t * .22) * .35;
-  return { s, ox, oy, dx, dy, rot };
+  const [a, b, s0, s1, sh0] = SHOTS[i];
+  let s = lerp(s0, s1, ease(P(t, a, b))), sh = sh0;
+  const hardCut = [C.cut1, C.cut2, C.cut3, C.cut4, COVER].some(c => Math.abs(c - a) < .01);
+  if (i > 0 && !hardCut) { const pv = SHOTS[i - 1], k = outExpo(P(t, a, a + .45)); s = lerp(pv[3], s, k); sh = lerp(pv[4], sh, k); }
+  let w = 1;
+  for (const c of [C.cut1, C.cut2, C.cut3, C.cut4]) { const d = t - c; if (d >= 0 && d < .4) w = 1 + .07 * Math.pow(1 - d / .4, 3); }
+  if (t >= COVER && t < COVER + .5) w = 1 + .1 * Math.pow(1 - (t - COVER) / .5, 3);
+  const dx = Math.sin(t * .35) * 8, dy = Math.cos(t * .27) * 5, rot = Math.sin(t * .22) * .3;
+  return { s, w, sh, dx, dy, rot };
 }
 
 // ---------- main ----------
 window.renderAt = async (t) => {
   await setFrame(t < COVER ? fidx(COVER + 1.25) : fidx(t));
   const c = camAt(t);
-  const tf = `translate(${c.ox + c.dx}px,${c.oy + c.dy}px) rotate(${c.rot}deg) scale(${c.s}) translate(${-c.ox}px,${-c.oy}px)`;
+  const tf = `translate(${c.dx}px,${c.sh + c.dy}px) translate(540px,600px) scale(${c.w}) rotate(${c.rot}deg) translate(-540px,-600px) translate(540px,0) scale(${c.s}) translate(-540px,0)`;
   cam.style.transform = tf; blurcam.style.transform = tf;
 
   // cover
@@ -392,20 +391,20 @@ window.renderAt = async (t) => {
   const coinOn = t > C.caruman && t < C.cut1 + .1;
   stack.visible = coinOn;
   stackCoins.forEach((c, i) => { const k = P(t, C.rm217 - .2 + i * .09, C.rm217 + .25 + i * .09); c.position.y = i * .11 + (1 - outCubic(k)) * 5; c.visible = k > 0; c.rotation.y = i * .7 + t * .3; });
-  stack.scale.setScalar(.95 * (1 - ease(P(t, C.cut1 - .3, C.cut1 + .1)))); stack.rotation.x = .35;
+  stack.scale.setScalar(.6 * (1 - ease(P(t, C.cut1 - .3, C.cut1 + .1)))); stack.rotation.x = .35;
   coins.forEach((c, i) => {
     const k = outBack(P(t, C.caruman + i * .07, C.caruman + .6 + i * .07)), o = ease(P(t, C.cut1 - .35, C.cut1 + .05));
     c.m.visible = coinOn && k > 0; if (!c.m.visible) return;
     const p = px(c.x - 470 * (i % 2), c.y - 120 + Math.sin(t * c.sp + c.ph) * 18, c.z); c.m.position.copy(p);
-    c.m.scale.setScalar(c.s * k * (1 - o) + 1e-4); c.m.rotation.set(1.2 + Math.sin(t * c.sp) * .5, t * c.sp + c.ph, .3);
+    c.m.scale.setScalar(c.s * .6 * k * (1 - o) + 1e-4); c.m.rotation.set(1.2 + Math.sin(t * c.sp) * .5, t * c.sp + c.ph, .3);
   });
   // ganjaran: gift + burst
   showObj(gift, t, C.menarik + .4, C.cut2 + .1, { rotIn: 2.5, spinRate: .5, tiltX: .3 });
   const lid = gift.obj.userData.lid, kOpen = outBack(P(t, C.ganjaran + .1, C.ganjaran + .6));
   lid.position.y = 1.2 + kOpen * .7; lid.rotation.z = kOpen * .35; lid.rotation.x = kOpen * -.2;
   burst.forEach(b => { const d = t - C.ganjaran - .2; b.m.visible = d > 0 && t < C.cut2 + .1; if (!b.m.visible) return;
-    const g0 = gift.root.position; b.m.position.set(g0.x + b.vx * d * .6, g0.y + 1 + b.vy * d - 3.2 * d * d, g0.z + b.vz * d);
-    b.m.rotation.set(b.rx * d, b.rx * d * .7, 0); b.m.scale.setScalar(b.s * (1 - ease(P(t, C.cut2 - .3, C.cut2 + .1))) + 1e-4); });
+    const g0 = gift.root.position; b.m.position.set(g0.x + b.vx * d * .3, g0.y + .6 + b.vy * d * .5 - 2.2 * d * d, g0.z + b.vz * d);
+    b.m.rotation.set(b.rx * d, b.rx * d * .7, 0); b.m.scale.setScalar(.6 * b.s * (1 - ease(P(t, C.cut2 - .3, C.cut2 + .1))) + 1e-4); });
   showObj(syringe, t, C.vaks - .2, C.cut3 + .1, { tiltX: 0, rotIn: 2, fromX: -3 });
   syringe.spin.rotation.z = -.7;
   showObj(heart, t, C.periksa - .15, C.cut4 + .1, { rotIn: 3.14, spinRate: .9 });

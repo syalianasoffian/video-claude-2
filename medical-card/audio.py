@@ -14,7 +14,10 @@ t_all = np.arange(N) / SR
 def read(path):
     tmp = os.path.join(B, "_v.wav")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-af",
-                    "highpass=f=70,acompressor=threshold=-20dB:ratio=2.5:attack=5:release=90,loudnorm=I=-15:TP=-1.5:LRA=7",
+                    "highpass=f=75,equalizer=f=210:t=o:w=1.2:g=2.5,equalizer=f=3400:t=o:w=1.4:g=-3,"
+                    "equalizer=f=6800:t=q:w=2:g=-3.5,highshelf=f=11000:g=-2.5,deesser=i=0.4,"
+                    "acompressor=threshold=-22dB:ratio=2:attack=12:release=160:knee=6,"
+                    "aecho=0.85:0.6:19|31|47:0.13|0.09|0.05,loudnorm=I=-15:TP=-1.5:LRA=9",
                     "-ac", "1", "-ar", str(SR), tmp], check=True)
     w = wave.open(tmp)
     return np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32) / 32768
