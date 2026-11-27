@@ -242,8 +242,9 @@ def title_plate():
     return _TITLE["im"]
 
 
-def top_label(fr, t):
-    """Title shown for the whole video (also on the end card). Top edge sits at y=232 (safe zone 220)."""
+def top_label(fr, t, y_top=854, size=0.66):
+    """Persistent title. In the video it sits just under the speaker's chin (y~810) and above the info panels,
+    so it never covers the face. On the end card it sits at y=280 (inside Meta's ~14% top margin)."""
     a = env(t, 0.3, TOTAL + 1, 0.5, 0.0)
     if a <= 0:
         return
@@ -251,11 +252,14 @@ def top_label(fr, t):
     ph = ((t - 1.2) % 4.0) / 1.1  # periodic gold glint
     im = shimmer(im, ph, width=0.12, strength=0.55)
     e = ease_out_back(prog(t, 0.3, 0.6))
-    im = scaled(im, 0.85 + 0.15 * e)
-    g, pad = glow(im, 18, GOLD, 0.35)
-    y = 232 + (100 - im.height) / 2
-    paste(fr, g, W / 2 - g.width / 2, y - pad, a * 0.9)
-    paste(fr, im, W / 2, y, a, "mt")
+    full_h = 100 * size
+    im = scaled(im, size * (0.85 + 0.15 * e))
+    g, pad = glow(im, 14, GOLD, 0.35)
+    cx = 515
+    y = y_top + (full_h - im.height) / 2
+    d, pad2 = drop_shadow(im, 12, (0, 8), 0.45)
+    paste(fr, g, cx - g.width / 2, y - pad, a * 0.9)
+    paste(fr, d, cx - d.width / 2, y - pad2, a)
 
 
 # ------------------------------------------------------------------ scenes
@@ -668,7 +672,7 @@ def end_card(t, frozen):
         paste(fr, g, cx - g.width / 2, 1190 - g.height / 2, min(1, pb * 2))
         d, pad2 = drop_shadow(im, 14, (0, 14), 0.5)
         paste(fr, d, cx - d.width / 2, 1190 - d.height / 2, min(1, pb * 2))
-    top_label(fr, t)
+    top_label(fr, t, y_top=280, size=0.85)
     stagger_text(fr, "AIA CERTIFIED FINCOACH PRACTITIONER", font("Montserrat", 21, 600), cx, 1272, te, 1.2,
                  tracking=4, per=0.006, dur=0.3, rise=8, anchor="m", color=GOLD_L, alpha=0.85)
     return fr
