@@ -11,3 +11,13 @@ Pipeline:
 3. `node src/render.js` – renders `src/index.html` (Three.js) frame by frame in headless Chromium → `build/video_noaudio.mp4`
    (`--stills 1,5,9` for preview frames)
 4. Mux: `ffmpeg -i build/video_noaudio.mp4 -i build/mix.wav -c:v copy -c:a aac output/takaful.mp4`
+
+## Reels: Takaful health explainer (9:16, 1080×1920)
+
+Animated infographic over the original 45 s narration (navy / white / gold), with all text and graphics
+inside the TikTok/Reels safe zone (220 px top, 480 px bottom, 120 px sides; subtitles stop at x=900 to keep clear of the buttons at bottom right).
+
+1. Put the narration at `build/reels/narration.mp3`
+2. `python3 reels/audio.py` → `build/reels/mix.wav` (narration + soft SFX)
+3. `node reels/render.js` → `build/reels/video_noaudio.mp4` (`--stills 1,5 --guides` shows the safe-zone overlay)
+4. `ffmpeg -i build/reels/video_noaudio.mp4 -i build/reels/mix.wav -c:v copy -c:a aac -b:a 192k -shortest output/takaful_reels.mp4`
